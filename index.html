@@ -11,27 +11,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  html,body,#root{height:100%;width:100%;overflow:hidden}
-  body{font-family:'DM Sans','Segoe UI',system-ui,sans-serif;background:#06090F;color:#E6EBF5;-webkit-tap-highlight-color:transparent}
-  ::-webkit-scrollbar{width:4px}
-  ::-webkit-scrollbar-track{background:transparent}
-  ::-webkit-scrollbar-thumb{background:#253044;border-radius:3px}
-  input:focus{border-color:#0EA5E9!important;outline:none}
-  button{font-family:inherit;-webkit-tap-highlight-color:transparent}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-  .fu{animation:fadeUp 0.35s ease forwards}
-  .fu1{animation-delay:.05s;opacity:0}.fu2{animation-delay:.1s;opacity:0}.fu3{animation-delay:.15s;opacity:0}.fu4{animation-delay:.2s;opacity:0}
-  .rh:hover{background:#182030!important}
-  @media(hover:none){.rh:active{background:#182030!important}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html,body,#root{height:100%;width:100%;overflow:hidden}body{font-family:'DM Sans','Segoe UI',system-ui,sans-serif;background:#06090F;color:#E6EBF5;-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#253044;border-radius:3px}input:focus{border-color:#0EA5E9!important;outline:none}button{font-family:inherit;-webkit-tap-highlight-color:transparent}@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.8}}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}@keyframes spin{to{transform:rotate(360deg)}}.fu{animation:fadeUp .35s ease forwards}.fu1{animation-delay:.05s;opacity:0}.fu2{animation-delay:.1s;opacity:0}.fu3{animation-delay:.15s;opacity:0}.fu4{animation-delay:.2s;opacity:0}.li{background:#131A25;border:1px solid #1C2536;border-radius:12px;padding:14px 16px;color:#E6EBF5;font-size:15px;outline:none;width:100%;font-family:inherit;transition:border-color .2s}.li:focus{border-color:#0284C7}.li::placeholder{color:#4C5C78}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const {useState,useEffect,useCallback,useRef} = React;
-
-/* ═══ ICONS ═══ */
+const{useState,useEffect}=React;
 const I=({children,size=20})=><svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{children}</svg>;
 const IcDash=p=><I {...p}><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></I>;
 const IcInv=p=><I {...p}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></I>;
@@ -52,546 +38,176 @@ const IcUser=p=><I {...p}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><
 const IcBox=p=><I {...p}><rect x="2" y="7" width="20" height="13" rx="1"/><path d="M9 7V4h6v3"/><line x1="8" y1="11" x2="8" y2="16"/><line x1="12" y1="11" x2="12" y2="16"/><line x1="16" y1="11" x2="16" y2="16"/></I>;
 const IcMenu=p=><I {...p}><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></I>;
 const IcBack=p=><I {...p}><polyline points="15 18 9 12 15 6"/></I>;
+const IcLogout=p=><I {...p}><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></I>;
+const IcLock=p=><I {...p}><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></I>;
+const IcMail=p=><I {...p}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></I>;
+const IcEye=p=><I {...p}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></I>;
+const IcEyeOff=p=><I {...p}><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></I>;
 
-/* ═══ THEME ═══ */
 const C={bg:"#06090F",sf:"#0D1117",card:"#131A25",cardH:"#182030",brd:"#1C2536",brdL:"#253044",txt:"#E6EBF5",ts:"#8B9BB5",td:"#4C5C78",ac:"#0284C7",ab:"#38BDF8",as:"#0284C715",gn:"#10B981",gs:"#10B98115",yl:"#EAB308",ys:"#EAB30815",rd:"#EF4444",rs:"#EF444415",tl:"#14B8A6"};
-const CUR="AED";
 const fm=n=>new Intl.NumberFormat("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n);
-const aed=n=>CUR+" "+fm(n);
-const sc=s=>({paid:C.gn,completed:C.gn,pending:C.yl,overdue:C.rd,processing:C.ac}[s]||C.td);
-const sb=s=>({paid:C.gs,completed:C.gs,pending:C.ys,overdue:C.rs,processing:C.as}[s]||C.td+"18");
+const aed=n=>"AED "+fm(n);
+const sc=s=>({paid:C.gn,completed:C.gn,pending:C.yl,overdue:C.rd}[s]||C.td);
+const sb=s=>({paid:C.gs,completed:C.gs,pending:C.ys,overdue:C.rs}[s]||C.td+"18");
+const useMob=()=>{const[m,setM]=useState(window.innerWidth<768);useEffect(()=>{const h=()=>setM(window.innerWidth<768);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)});return m};
 
-/* ═══ RESPONSIVE HOOK ═══ */
-const useIsMobile=()=>{
-  const [m,setM]=useState(window.innerWidth<768);
-  useEffect(()=>{const h=()=>setM(window.innerWidth<768);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h)},[]);
-  return m;
+const ACCOUNTS={
+msc:{cust:{name:"Mediterranean Shipping Company",short:"MSC",id:"CUST-MSC-00147",contact:"Ahmad Al-Rashid",email:"port.finance@msc.com",creditLimit:500000,creditUsed:214666,initials:"AR",color:"#1A365D"},cred:{e:"msc@demo.com",p:"msc123"},
+invs:[
+{id:"INV-2026-0847",vessel:"MSC AURORA",voyage:"VA-2843E",type:"Vessel Call",services:[{name:"Pilotage (In & Out)",amt:8400},{name:"Towage (2 Tugs × 3hrs)",amt:14400},{name:"Berth Hire (T2-B4, 2 days)",amt:11100},{name:"Mooring / Unmooring",amt:3400},{name:"Fresh Water Supply (180t)",amt:5400},{name:"Waste Disposal",amt:5150}],amount:47850,due:"2026-03-15",issued:"2026-03-02",status:"pending",containers:342,berth:"T2-B4"},
+{id:"INV-2026-0838",vessel:"MSC DIANA",voyage:"VD-1190S",type:"Container Handling",services:[{name:"THC — 320 × 20ft (TEU)",amt:59200},{name:"THC — 180 × 40ft (FEU)",amt:51300},{name:"Reefer Plug-in (42 units × 3 days)",amt:8190},{name:"Lift On/Off (500 moves)",amt:15000},{name:"VGM Weighing (500 units)",amt:3250}],amount:136940,due:"2026-03-10",issued:"2026-02-25",status:"overdue",containers:500,berth:"T1-B3"},
+{id:"INV-2026-0832",vessel:"MSC AURORA",voyage:"VA-2841E",type:"Storage & Demurrage",services:[{name:"Container Storage (78 TEU × 8 days)",amt:14976},{name:"Demurrage Charges",amt:9800},{name:"Reefer Storage (12 units × 5 days)",amt:5100}],amount:29876,due:"2026-03-20",issued:"2026-03-05",status:"pending",containers:78,berth:"Yard A"},
+{id:"INV-2026-0819",vessel:"MSC FANTASIA",voyage:"VF-0887W",type:"Vessel Call",services:[{name:"Pilotage (In & Out)",amt:9200},{name:"Towage (3 Tugs × 4hrs)",amt:28800},{name:"Berth Hire (T1-B1, 3 days)",amt:16650},{name:"Mooring / Unmooring",amt:3400},{name:"Bunkering Support",amt:4250}],amount:62300,due:"2026-02-28",issued:"2026-02-15",status:"paid",containers:610,berth:"T1-B1"},
+{id:"INV-2026-0802",vessel:"MSC DIANA",voyage:"VD-1187S",type:"Container Handling",services:[{name:"THC — 240 × 20ft (TEU)",amt:44400},{name:"THC — 120 × 40ft (FEU)",amt:34200},{name:"Reefer Monitoring (28 units)",amt:5460},{name:"Customs Inspection Support",amt:4800}],amount:88860,due:"2026-02-20",issued:"2026-02-08",status:"paid",containers:360,berth:"T1-B3"},
+],txns:[
+{id:"TXN-90281",invoice:"INV-2026-0819",vessel:"MSC FANTASIA",amount:62300,method:"Wire Transfer",ref:"SWIFT: MSCLGB2L...8847",date:"2026-02-28",status:"completed"},
+{id:"TXN-90267",invoice:"INV-2026-0802",vessel:"MSC DIANA",amount:88860,method:"Wire Transfer",ref:"SWIFT: MSCLGB2L...6614",date:"2026-02-20",status:"completed"},
+{id:"TXN-90254",invoice:"INV-2026-0791",vessel:"MSC AURORA",amount:29725,method:"Letter of Credit",ref:"LC/2026/MSC/0178",date:"2026-02-12",status:"completed"},
+],vessels:[{n:"MSC AURORA",v:"VA-2843E",b:"T2-B4",s:"Alongside — Discharging",c:"342 moves"},{n:"MSC DIANA",v:"VD-1190S",b:"Departed",s:"Sailed 2026-03-08",c:"500 moves"},{n:"MSC FANTASIA",v:"VF-0888W",b:"Expected T1-B1",s:"ETA 2026-03-16",c:"~480 planned"}],
+notifs:[{id:1,text:"INV-2026-0838 for MSC DIANA is overdue.",color:C.rd,time:"2h ago",action:{tab:"invoices",iid:"INV-2026-0838"},read:false},{id:2,text:"New invoice INV-2026-0847 for MSC AURORA.",color:C.ab,time:"1d ago",action:{tab:"invoices",iid:"INV-2026-0847"},read:false},{id:3,text:"Payment TXN-90281 confirmed.",color:C.gn,time:"3d ago",action:{tab:"history"},read:false},{id:4,text:"Credit utilization at 43%.",color:C.yl,time:"5d ago",action:{tab:"statements"},read:true}]},
+cma:{cust:{name:"CMA CGM Group",short:"CMA CGM",id:"CUST-CMA-00231",contact:"Marie Dupont",email:"port.ops@cma-cgm.com",creditLimit:750000,creditUsed:329405,initials:"MD",color:"#1B3A4B"},cred:{e:"cma@demo.com",p:"cma123"},
+invs:[
+{id:"INV-2026-0851",vessel:"CMA CGM MARCO POLO",voyage:"MP-0567S",type:"Vessel Call",services:[{name:"Pilotage (In & Out)",amt:12600},{name:"Towage (3 Tugs × 4hrs)",amt:28800},{name:"Berth Hire (T1-B1, 3 days)",amt:16650},{name:"Mooring / Unmooring",amt:3400},{name:"Fresh Water Supply (250t)",amt:7500},{name:"Bunkering Support",amt:6200}],amount:75150,due:"2026-03-18",issued:"2026-03-04",status:"pending",containers:720,berth:"T1-B1"},
+{id:"INV-2026-0845",vessel:"CMA CGM JACQUES SAADE",voyage:"JS-2211E",type:"Container Handling",services:[{name:"THC — 480 × 20ft (TEU)",amt:88800},{name:"THC — 290 × 40ft (FEU)",amt:82650},{name:"Reefer Plug-in (65 units × 4 days)",amt:16900},{name:"Lift On/Off (770 moves)",amt:23100},{name:"VGM Weighing (770 units)",amt:5005}],amount:216455,due:"2026-03-08",issued:"2026-02-22",status:"overdue",containers:770,berth:"T2-B5"},
+{id:"INV-2026-0839",vessel:"CMA CGM MARCO POLO",voyage:"MP-0565S",type:"Storage & Demurrage",services:[{name:"Container Storage (120 TEU × 6 days)",amt:17280},{name:"Demurrage Charges",amt:14400},{name:"Reefer Storage (18 units × 4 days)",amt:6120}],amount:37800,due:"2026-03-22",issued:"2026-03-06",status:"pending",containers:120,berth:"Yard B"},
+{id:"INV-2026-0821",vessel:"CMA CGM THALASSA",voyage:"TH-1890W",type:"Vessel Call",services:[{name:"Pilotage (In & Out)",amt:10800},{name:"Towage (2 Tugs × 3hrs)",amt:14400},{name:"Berth Hire (T2-B3, 2 days)",amt:11100},{name:"Mooring / Unmooring",amt:3400},{name:"Waste Disposal",amt:4850}],amount:44550,due:"2026-02-25",issued:"2026-02-12",status:"paid",containers:445,berth:"T2-B3"},
+{id:"INV-2026-0808",vessel:"CMA CGM JACQUES SAADE",voyage:"JS-2209E",type:"Container Handling",services:[{name:"THC — 350 × 20ft (TEU)",amt:64750},{name:"THC — 200 × 40ft (FEU)",amt:57000},{name:"Reefer Monitoring (40 units)",amt:7800},{name:"Customs Inspection Support",amt:6400}],amount:135950,due:"2026-02-18",issued:"2026-02-05",status:"paid",containers:550,berth:"T2-B5"},
+],txns:[
+{id:"TXN-90279",invoice:"INV-2026-0821",vessel:"CMA CGM THALASSA",amount:44550,method:"Wire Transfer",ref:"SWIFT: CMACFR2P...4421",date:"2026-02-25",status:"completed"},
+{id:"TXN-90265",invoice:"INV-2026-0808",vessel:"CMA CGM JACQUES SAADE",amount:135950,method:"Letter of Credit",ref:"LC/2026/CMA/0341",date:"2026-02-18",status:"completed"},
+{id:"TXN-90248",invoice:"INV-2026-0794",vessel:"CMA CGM MARCO POLO",amount:52300,method:"Wire Transfer",ref:"SWIFT: CMACFR2P...2218",date:"2026-02-08",status:"completed"},
+],vessels:[{n:"CMA CGM MARCO POLO",v:"MP-0567S",b:"T1-B1",s:"Alongside — Loading",c:"720 moves"},{n:"CMA CGM JACQUES SAADE",v:"JS-2211E",b:"Departed",s:"Sailed 2026-03-06",c:"770 moves"},{n:"CMA CGM THALASSA",v:"TH-1892W",b:"Expected T2-B3",s:"ETA 2026-03-19",c:"~500 planned"}],
+notifs:[{id:1,text:"INV-2026-0845 for JACQUES SAADE is overdue.",color:C.rd,time:"1h ago",action:{tab:"invoices",iid:"INV-2026-0845"},read:false},{id:2,text:"New invoice INV-2026-0851 for MARCO POLO.",color:C.ab,time:"8h ago",action:{tab:"invoices",iid:"INV-2026-0851"},read:false},{id:3,text:"Payment TXN-90279 confirmed.",color:C.gn,time:"2d ago",action:{tab:"history"},read:true}]}
 };
 
-/* ═══ DATA ═══ */
-const cust={name:"Mediterranean Shipping Company",short:"MSC",id:"CUST-MSC-00147",contact:"Ahmad Al-Rashid",email:"port.finance@msc.com",creditLimit:500000,creditUsed:214666};
-
-const invs=[
-  {id:"INV-2026-0847",vessel:"MSC AURORA",voyage:"VA-2843E",type:"Vessel Call",services:[{name:"Pilotage (In & Out)",amt:8400},{name:"Towage (2 Tugs × 3hrs)",amt:14400},{name:"Berth Hire (T2-B4, 2 days)",amt:11100},{name:"Mooring / Unmooring",amt:3400},{name:"Fresh Water Supply (180t)",amt:5400},{name:"Waste Disposal",amt:5150}],amount:47850,due:"2026-03-15",issued:"2026-03-02",status:"pending",containers:342,berth:"T2-B4"},
-  {id:"INV-2026-0838",vessel:"MSC DIANA",voyage:"VD-1190S",type:"Container Handling",services:[{name:"THC — 320 × 20ft (TEU)",amt:59200},{name:"THC — 180 × 40ft (FEU)",amt:51300},{name:"Reefer Plug-in (42 units × 3 days)",amt:8190},{name:"Lift On/Off (500 moves)",amt:15000},{name:"VGM Weighing (500 units)",amt:3250}],amount:136940,due:"2026-03-10",issued:"2026-02-25",status:"overdue",containers:500,berth:"T1-B3"},
-  {id:"INV-2026-0832",vessel:"MSC AURORA",voyage:"VA-2841E",type:"Storage & Demurrage",services:[{name:"Container Storage (78 TEU × 8 days)",amt:14976},{name:"Demurrage Charges",amt:9800},{name:"Reefer Storage (12 units × 5 days)",amt:5100}],amount:29876,due:"2026-03-20",issued:"2026-03-05",status:"pending",containers:78,berth:"Yard A"},
-  {id:"INV-2026-0819",vessel:"MSC FANTASIA",voyage:"VF-0887W",type:"Vessel Call",services:[{name:"Pilotage (In & Out)",amt:9200},{name:"Towage (3 Tugs × 4hrs)",amt:28800},{name:"Berth Hire (T1-B1, 3 days)",amt:16650},{name:"Mooring / Unmooring",amt:3400},{name:"Bunkering Support",amt:4250}],amount:62300,due:"2026-02-28",issued:"2026-02-15",status:"paid",containers:610,berth:"T1-B1"},
-  {id:"INV-2026-0802",vessel:"MSC DIANA",voyage:"VD-1187S",type:"Container Handling",services:[{name:"THC — 240 × 20ft (TEU)",amt:44400},{name:"THC — 120 × 40ft (FEU)",amt:34200},{name:"Reefer Monitoring (28 units)",amt:5460},{name:"Customs Inspection Support",amt:4800}],amount:88860,due:"2026-02-20",issued:"2026-02-08",status:"paid",containers:360,berth:"T1-B3"},
-  {id:"INV-2026-0791",vessel:"MSC AURORA",voyage:"VA-2839E",type:"Vessel Call",services:[{name:"Pilotage (In & Out)",amt:8400},{name:"Towage (2 Tugs × 2hrs)",amt:9600},{name:"Berth Hire (T2-B4, 1.5 days)",amt:8325},{name:"Mooring / Unmooring",amt:3400}],amount:29725,due:"2026-02-12",issued:"2026-02-01",status:"paid",containers:280,berth:"T2-B4"},
-];
-
-const txns=[
-  {id:"TXN-90281",invoice:"INV-2026-0819",vessel:"MSC FANTASIA",amount:62300,method:"Wire Transfer",ref:"SWIFT: MSCLGB2L...8847",date:"2026-02-28",status:"completed"},
-  {id:"TXN-90267",invoice:"INV-2026-0802",vessel:"MSC DIANA",amount:88860,method:"Wire Transfer",ref:"SWIFT: MSCLGB2L...6614",date:"2026-02-20",status:"completed"},
-  {id:"TXN-90254",invoice:"INV-2026-0791",vessel:"MSC AURORA",amount:29725,method:"Letter of Credit",ref:"LC/2026/MSC/0178",date:"2026-02-12",status:"completed"},
-  {id:"TXN-90231",invoice:"INV-2026-0776",vessel:"MSC AURORA",amount:41200,method:"Wire Transfer",ref:"SWIFT: MSCLGB2L...2290",date:"2026-01-30",status:"completed"},
-  {id:"TXN-90218",invoice:"INV-2026-0761",vessel:"MSC FANTASIA",amount:55100,method:"Wire Transfer",ref:"SWIFT: MSCLGB2L...1158",date:"2026-01-22",status:"completed"},
-];
-
-/* ═══ NOTIFICATIONS — each has an action (tab to go to, optional invoice to open) ═══ */
-const notifs=[
-  {id:1,text:"INV-2026-0838 for MSC DIANA is overdue. Please arrange payment.",color:C.rd,time:"2h ago",action:{tab:"invoices",invoiceId:"INV-2026-0838"},read:false},
-  {id:2,text:"New invoice INV-2026-0847 issued for MSC AURORA.",color:C.ab,time:"1d ago",action:{tab:"invoices",invoiceId:"INV-2026-0847"},read:false},
-  {id:3,text:"Payment TXN-90281 confirmed — INV-2026-0819 settled.",color:C.gn,time:"3d ago",action:{tab:"history"},read:false},
-  {id:4,text:"Credit utilization at 43%. AED 285,334 available.",color:C.yl,time:"5d ago",action:{tab:"statements"},read:true},
-];
-
-/* ═══ SMALL COMPONENTS ═══ */
-const Badge=({status,style:sx})=><span style={{display:"inline-flex",alignItems:"center",gap:5,padding:"3px 10px",borderRadius:16,fontSize:11,fontWeight:600,color:sc(status),background:sb(status),textTransform:"capitalize",whiteSpace:"nowrap",...sx}}><span style={{width:5,height:5,borderRadius:"50%",background:sc(status)}}/>{status}</span>;
-
-const Btn=({variant="primary",children,style:sx,...p})=>{
-  const b={display:"inline-flex",alignItems:"center",gap:8,padding:"10px 20px",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",border:"none",transition:"all 0.15s",fontFamily:"inherit"};
-  const v={primary:{background:C.ac,color:"#fff"},outline:{background:"transparent",color:C.txt,border:`1px solid ${C.brdL}`},ghost:{background:"transparent",color:C.ts}};
-  return <button style={{...b,...(v[variant]||v.primary),...sx}} {...p}>{children}</button>;
-};
-
-const Spark=({data,color,w=110,h=32})=>{
-  const mx=Math.max(...data),mn=Math.min(...data),r=mx-mn||1;
-  const pts=data.map((v,i)=>`${(i/(data.length-1))*w},${h-((v-mn)/r)*(h-4)-2}`).join(" ");
-  const gid="g"+color.replace(/[^a-z0-9]/gi,"").slice(0,8);
-  return <svg width={w} height={h} style={{display:"block"}}><defs><linearGradient id={gid} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={color} stopOpacity="0.25"/><stop offset="100%" stopColor={color} stopOpacity="0"/></linearGradient></defs><polygon points={`0,${h} ${pts} ${w},${h}`} fill={`url(#${gid})`}/><polyline points={pts} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round"/></svg>;
-};
-
+const Badge=({status})=><span style={{display:"inline-flex",alignItems:"center",gap:5,padding:"3px 10px",borderRadius:16,fontSize:11,fontWeight:600,color:sc(status),background:sb(status),textTransform:"capitalize",whiteSpace:"nowrap"}}><span style={{width:5,height:5,borderRadius:"50%",background:sc(status)}}/>{status}</span>;
+const Btn=({variant="primary",children,style:sx,...p})=><button style={{display:"inline-flex",alignItems:"center",gap:8,padding:"10px 20px",borderRadius:10,fontSize:14,fontWeight:600,cursor:"pointer",border:"none",transition:"all .15s",fontFamily:"inherit",...(variant==="primary"?{background:C.ac,color:"#fff"}:variant==="outline"?{background:"transparent",color:C.txt,border:`1px solid ${C.brdL}`}:{background:"transparent",color:C.ts}),...sx}} {...p}>{children}</button>;
+const Spark=({data,color,w=110,h=32})=>{const mx=Math.max(...data),mn=Math.min(...data),r=mx-mn||1;const pts=data.map((v,i)=>`${(i/(data.length-1))*w},${h-((v-mn)/r)*(h-4)-2}`).join(" ");const g="g"+color.replace(/\W/g,"").slice(0,8);return<svg width={w} height={h} style={{display:"block"}}><defs><linearGradient id={g} x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={color} stopOpacity=".25"/><stop offset="100%" stopColor={color} stopOpacity="0"/></linearGradient></defs><polygon points={`0,${h} ${pts} ${w},${h}`} fill={`url(#${g})`}/><polyline points={pts} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round"/></svg>};
 const Card=({children,style:sx,...p})=><div style={{background:C.card,borderRadius:14,border:`1px solid ${C.brd}`,padding:"18px 20px",...sx}} {...p}>{children}</div>;
 
-/* ═══════════ MAIN APP ═══════════ */
-function App(){
-  const mob=useIsMobile();
-  const [tab,setTab]=useState("home");
-  const [selInv,setSelInv]=useState(null);
-  const [payModal,setPayModal]=useState(false);
-  const [payStep,setPayStep]=useState(0);
-  const [payInv,setPayInv]=useState(null);
-  const [search,setSearch]=useState("");
-  const [filter,setFilter]=useState("all");
-  const [notifOpen,setNotifOpen]=useState(false);
-  const [selPay,setSelPay]=useState([]);
-  const [payMethod,setPayMethod]=useState("wire");
-  const [moreOpen,setMoreOpen]=useState(false);
-  const [notifsState,setNotifsState]=useState(notifs);
-
-  /* ── NAVIGATION HISTORY (back button support) ── */
-  const [navHistory,setNavHistory]=useState([]);
-  const canGoBack=navHistory.length>0||selInv!==null;
-
-  const navigate=(newTab,invoice=null)=>{
-    // Push current state to history
-    setNavHistory(prev=>[...prev,{tab,selInv,moreOpen}]);
-    setTab(newTab);
-    setSelInv(invoice);
-    setMoreOpen(false);
-    setNotifOpen(false);
-  };
-
-  const goBack=()=>{
-    if(selInv){
-      // If viewing invoice detail, go back to invoice list
-      setSelInv(null);
-      return;
-    }
-    if(navHistory.length>0){
-      const prev=navHistory[navHistory.length-1];
-      setNavHistory(h=>h.slice(0,-1));
-      setTab(prev.tab);
-      setSelInv(prev.selInv);
-      setMoreOpen(prev.moreOpen||false);
-    }
-  };
-
-  const goHome=()=>{
-    setNavHistory([]);
-    setTab("home");
-    setSelInv(null);
-    setMoreOpen(false);
-    setNotifOpen(false);
-  };
-
-  // Tab navigation from bottom bar / sidebar (resets history)
-  const goTab=t=>{
-    if(t===tab&&!selInv){return}
-    setNavHistory([]);
-    setTab(t);
-    setSelInv(null);
-    setMoreOpen(false);
-  };
-
-  // Handle notification click
-  const handleNotifClick=(notif)=>{
-    // Mark as read
-    setNotifsState(prev=>prev.map(n=>n.id===notif.id?{...n,read:true}:n));
-    setNotifOpen(false);
-    if(notif.action){
-      const inv=notif.action.invoiceId?invs.find(i=>i.id===notif.action.invoiceId):null;
-      navigate(notif.action.tab,inv);
-    }
-  };
-
-  const unreadCount=notifsState.filter(n=>!n.read).length;
-
-  const unpaid=invs.filter(i=>i.status!=="paid");
-  const totalOut=unpaid.reduce((s,i)=>s+i.amount,0);
-  const totalOver=invs.filter(i=>i.status==="overdue").reduce((s,i)=>s+i.amount,0);
-  const totalPaid=invs.filter(i=>i.status==="paid").reduce((s,i)=>s+i.amount,0);
-  const batchTot=selPay.reduce((s,id)=>s+(invs.find(i=>i.id===id)?.amount||0),0);
-  const filtered=invs.filter(inv=>{const q=search.toLowerCase();return(!q||inv.id.toLowerCase().includes(q)||inv.vessel.toLowerCase().includes(q))&&(filter==="all"||inv.status===filter)});
-
-  const openPay=inv=>{setPayInv(inv);setPayStep(0);setPayModal(true)};
-  const gap=mob?14:20;
-
-  /* ── NOTIFICATION PANEL (shared between mobile/desktop) ── */
-  const NotifPanel=({style:sx})=><div style={{background:C.sf,border:`1px solid ${C.brd}`,borderRadius:14,boxShadow:"0 20px 60px rgba(0,0,0,0.6)",overflow:"hidden",...sx}}>
-    <div style={{padding:"14px 20px",borderBottom:`1px solid ${C.brd}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-      <span style={{fontWeight:700,fontSize:14}}>Notifications</span>
-      {unreadCount>0&&<span style={{fontSize:11,fontWeight:600,color:C.ab,background:C.as,padding:"2px 8px",borderRadius:10}}>{unreadCount} new</span>}
-    </div>
-    {notifsState.map(n=><div key={n.id} onClick={()=>handleNotifClick(n)} style={{padding:"13px 20px",borderBottom:`1px solid ${C.brd}06`,display:"flex",gap:10,cursor:"pointer",background:n.read?"transparent":C.cardH+"60",transition:"background 0.15s"}}>
-      <span style={{width:8,height:8,borderRadius:"50%",background:n.color,marginTop:6,flexShrink:0}}/>
-      <div style={{flex:1}}>
-        <div style={{fontSize:13,lineHeight:1.4,color:n.read?C.ts:C.txt}}>{n.text}</div>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:4}}>
-          <span style={{fontSize:11,color:C.td}}>{n.time}</span>
-          <span style={{fontSize:11,color:C.ab,fontWeight:600}}>View →</span>
+/* ═══ LOGIN ═══ */
+function LoginPage({onLogin}){
+  const mob=useMob();
+  const[email,setEmail]=useState("");
+  const[pass,setPass]=useState("");
+  const[showP,setShowP]=useState(false);
+  const[err,setErr]=useState("");
+  const[loading,setLoading]=useState(false);
+  const go=()=>{setErr("");setLoading(true);setTimeout(()=>{const f=Object.entries(ACCOUNTS).find(([,a])=>a.cred.e===email.toLowerCase().trim()&&a.cred.p===pass);if(f)onLogin(f[0]);else{setErr("Invalid email or password.");setLoading(false)}},700)};
+  return<div style={{height:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:C.bg,position:"relative",overflow:"hidden",padding:20}}>
+    <div style={{position:"absolute",top:-100,right:-100,width:400,height:400,borderRadius:"50%",background:`radial-gradient(circle,${C.ac}08 0%,transparent 70%)`,animation:"pulse 6s ease infinite"}}/>
+    <div style={{position:"absolute",bottom:-80,left:-80,width:300,height:300,borderRadius:"50%",background:`radial-gradient(circle,${C.tl}06 0%,transparent 70%)`,animation:"pulse 8s ease infinite 2s"}}/>
+    <div style={{position:"absolute",top:"15%",left:"10%",fontSize:80,opacity:.02,animation:"float 6s ease infinite"}}>⚓</div>
+    <div style={{width:"100%",maxWidth:440,position:"relative",zIndex:1,animation:"slideUp .6s ease"}}>
+      <div style={{textAlign:"center",marginBottom:36}}>
+        <div style={{width:64,height:64,borderRadius:16,background:`linear-gradient(135deg,${C.ac},${C.tl})`,display:"inline-flex",alignItems:"center",justifyContent:"center",marginBottom:16,boxShadow:`0 8px 32px ${C.ac}30`}}><IcAnchor size={32}/></div>
+        <h1 style={{fontSize:28,fontWeight:800,margin:"0 0 4px",letterSpacing:"-.02em"}}>GTPay</h1>
+        <div style={{fontSize:12,color:C.td,fontWeight:500,letterSpacing:".1em",textTransform:"uppercase"}}>Customer Payment Portal</div>
+      </div>
+      <div style={{background:C.sf,borderRadius:20,border:`1px solid ${C.brd}`,padding:mob?"28px 24px":"36px 32px",boxShadow:"0 20px 80px rgba(0,0,0,.4)"}}>
+        <h2 style={{fontSize:22,fontWeight:800,margin:"0 0 4px"}}>Sign In</h2>
+        <p style={{fontSize:14,color:C.ts,margin:"0 0 28px"}}>Access your port payment account</p>
+        {err&&<div style={{background:C.rs,border:`1px solid ${C.rd}30`,borderRadius:10,padding:"12px 14px",marginBottom:20,display:"flex",gap:10,alignItems:"center"}}><IcAlert size={16}/><span style={{fontSize:13,color:C.rd}}>{err}</span></div>}
+        <div style={{display:"flex",flexDirection:"column",gap:16}}>
+          <div><label style={{fontSize:12,color:C.td,fontWeight:600,display:"block",marginBottom:6,textTransform:"uppercase",letterSpacing:".06em"}}>Email Address</label><div style={{position:"relative"}}><div style={{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",color:C.td}}><IcMail size={16}/></div><input className="li" style={{paddingLeft:42}} placeholder="Enter your email" value={email} onChange={e=>{setEmail(e.target.value);setErr("")}} onKeyDown={e=>e.key==="Enter"&&go()}/></div></div>
+          <div><label style={{fontSize:12,color:C.td,fontWeight:600,display:"block",marginBottom:6,textTransform:"uppercase",letterSpacing:".06em"}}>Password</label><div style={{position:"relative"}}><div style={{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",color:C.td}}><IcLock size={16}/></div><input className="li" style={{paddingLeft:42,paddingRight:42}} type={showP?"text":"password"} placeholder="Enter your password" value={pass} onChange={e=>{setPass(e.target.value);setErr("")}} onKeyDown={e=>e.key==="Enter"&&go()}/><button onClick={()=>setShowP(!showP)} style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",color:C.td,cursor:"pointer",padding:4}}>{showP?<IcEyeOff size={16}/>:<IcEye size={16}/>}</button></div></div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",margin:"4px 0"}}><label style={{display:"flex",alignItems:"center",gap:8,cursor:"pointer",fontSize:13,color:C.ts}}><input type="checkbox" style={{accentColor:C.ac,width:16,height:16}}/> Remember me</label><span style={{fontSize:13,color:C.ab,cursor:"pointer",fontWeight:600}}>Forgot password?</span></div>
+          <button disabled={loading||!email||!pass} onClick={go} style={{width:"100%",padding:16,borderRadius:12,border:loading?`1px solid ${C.brd}`:"none",fontSize:16,fontWeight:700,cursor:loading?"not-allowed":"pointer",fontFamily:"inherit",background:loading?"transparent":C.ac,color:loading?C.ts:"#fff",opacity:!email||!pass?.5:1,marginTop:4,transition:"all .2s"}}>{loading?<span style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10}}><span style={{width:18,height:18,border:`2px solid ${C.brd}`,borderTopColor:C.ab,borderRadius:"50%",display:"inline-block",animation:"spin .8s linear infinite"}}/>Signing in...</span>:"Sign In"}</button>
         </div>
       </div>
-    </div>)}
-    {notifsState.length===0&&<div style={{padding:30,textAlign:"center",color:C.td}}>No notifications</div>}
-  </div>;
-
-  /* ── HOME ── */
-  const HomeView=()=><div style={{display:"flex",flexDirection:"column",gap}}>
-    <div className="fu" style={{background:`linear-gradient(135deg,${C.card} 0%,#0C2340 100%)`,borderRadius:14,border:`1px solid ${C.brdL}`,padding:mob?"18px":"22px 24px",position:"relative",overflow:"hidden"}}>
-      <div style={{position:"absolute",right:-10,top:-20,opacity:0.04,fontSize:mob?120:200}}>⚓</div>
-      <div style={{position:"relative"}}>
-        <div style={{fontSize:13,color:C.ts,marginBottom:3}}>Welcome back,</div>
-        <h2 style={{fontSize:mob?20:26,fontWeight:800,margin:"0 0 2px",letterSpacing:"-0.02em"}}>{cust.contact}</h2>
-        <div style={{fontSize:mob?12:14,color:C.ts}}>{cust.name}</div>
+      <div style={{marginTop:24,background:C.card,borderRadius:14,border:`1px solid ${C.brd}`,padding:"16px 20px"}}>
+        <div style={{fontSize:12,color:C.td,fontWeight:700,marginBottom:10,textTransform:"uppercase",letterSpacing:".06em"}}>Demo Accounts</div>
+        {[{l:"MSC",e:"msc@demo.com",p:"msc123",c:"#1A365D"},{l:"CMA CGM",e:"cma@demo.com",p:"cma123",c:"#1B3A4B"}].map((d,i)=><div key={i} onClick={()=>{setEmail(d.e);setPass(d.p);setErr("")}} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 14px",background:C.cardH,borderRadius:10,cursor:"pointer",border:`1px solid ${C.brd}`,marginBottom:i===0?8:0,transition:"border-color .15s"}} onMouseOver={e=>e.currentTarget.style.borderColor=C.ac} onMouseOut={e=>e.currentTarget.style.borderColor=C.brd}><div style={{display:"flex",alignItems:"center",gap:10}}><div style={{width:32,height:32,borderRadius:8,background:d.c,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:10,color:C.ab}}>{d.l.slice(0,3)}</div><div><div style={{fontSize:13,fontWeight:700}}>{d.l}</div><div style={{fontSize:11,color:C.td}}>{d.e}</div></div></div><span style={{fontSize:11,color:C.ab,fontWeight:600}}>Use →</span></div>)}
       </div>
+      <div style={{textAlign:"center",marginTop:20,fontSize:12,color:C.td}}>Khorfakkan Commercial Terminal Operations · Port of Khorfakkan</div>
     </div>
+  </div>;
+}
 
-    <div style={{display:"grid",gridTemplateColumns:mob?"1fr 1fr":"repeat(4,1fr)",gap:mob?10:14}}>
-      {[
-        {l:"Outstanding",v:aed(totalOut),c:C.ab,sp:[180000,195000,230000,215000,210000,totalOut]},
-        {l:"Overdue",v:aed(totalOver),c:C.rd,sp:[40000,60000,90000,120000,130000,totalOver],s:"1 invoice"},
-        {l:"Paid (30d)",v:aed(totalPaid),c:C.gn,sp:[95000,110000,140000,155000,170000,totalPaid]},
-        {l:"Credit Left",v:aed(cust.creditLimit-cust.creditUsed),c:C.tl,sp:[200000,240000,280000,300000,290000,cust.creditLimit-cust.creditUsed],s:Math.round(cust.creditUsed/cust.creditLimit*100)+"% used"},
-      ].map((k,i)=><div key={i} className={`fu fu${i+1}`} style={{background:C.card,borderRadius:12,border:`1px solid ${C.brd}`,padding:mob?"14px":"18px 20px"}}>
-        <div style={{fontSize:11,color:C.ts,marginBottom:6,fontWeight:500}}>{k.l}</div>
-        <div style={{fontSize:mob?16:22,fontWeight:800,letterSpacing:"-0.02em"}}>{k.v}</div>
-        {k.s&&<div style={{fontSize:11,color:C.td,marginTop:2}}>{k.s}</div>}
-        <div style={{marginTop:8}}><Spark data={k.sp} color={k.c} w={mob?100:110}/></div>
-      </div>)}
-    </div>
+/* ═══ PORTAL ═══ */
+function Portal({ak,onLogout}){
+  const mob=useMob();const A=ACCOUNTS[ak];const{cust,invs,txns,vessels}=A;
+  const[tab,setTab]=useState("home");const[selInv,setSelInv]=useState(null);const[payModal,setPayModal]=useState(false);const[payStep,setPayStep]=useState(0);const[payInv,setPayInv]=useState(null);const[search,setSearch]=useState("");const[filter,setFilter]=useState("all");const[notifOpen,setNotifOpen]=useState(false);const[selPay,setSelPay]=useState([]);const[payMethod,setPayMethod]=useState("wire");const[moreOpen,setMoreOpen]=useState(false);const[nState,setNState]=useState(A.notifs);const[navH,setNavH]=useState([]);
+  const canBack=navH.length>0||selInv!==null;
+  const unpaid=invs.filter(i=>i.status!=="paid");const totalOut=unpaid.reduce((s,i)=>s+i.amount,0);const totalOver=invs.filter(i=>i.status==="overdue").reduce((s,i)=>s+i.amount,0);const totalPaid=invs.filter(i=>i.status==="paid").reduce((s,i)=>s+i.amount,0);const batchTot=selPay.reduce((s,id)=>s+(invs.find(i=>i.id===id)?.amount||0),0);const filtered=invs.filter(inv=>{const q=search.toLowerCase();return(!q||inv.id.toLowerCase().includes(q)||inv.vessel.toLowerCase().includes(q))&&(filter==="all"||inv.status===filter)});const unread=nState.filter(n=>!n.read).length;
+  const nav=(t,inv=null)=>{setNavH(p=>[...p,{tab,selInv,moreOpen}]);setTab(t);setSelInv(inv);setMoreOpen(false);setNotifOpen(false)};
+  const goBack=()=>{if(selInv){setSelInv(null);return}if(navH.length>0){const p=navH[navH.length-1];setNavH(h=>h.slice(0,-1));setTab(p.tab);setSelInv(p.selInv);setMoreOpen(p.moreOpen||false)}};
+  const goHome=()=>{setNavH([]);setTab("home");setSelInv(null);setMoreOpen(false);setNotifOpen(false)};
+  const goTab=t=>{if(t===tab&&!selInv)return;setNavH([]);setTab(t);setSelInv(null);setMoreOpen(false)};
+  const nClick=n=>{setNState(p=>p.map(x=>x.id===n.id?{...x,read:true}:x));setNotifOpen(false);if(n.action){const inv=n.action.iid?invs.find(i=>i.id===n.action.iid):null;nav(n.action.tab,inv)}};
+  const openPay=inv=>{setPayInv(inv);setPayStep(0);setPayModal(true)};const gap=mob?14:20;
 
-    <Card><h3 style={{fontSize:15,fontWeight:700,margin:"0 0 14px"}}>Action Required</h3>
-      <div style={{display:"flex",flexDirection:"column",gap:8}}>
-        {unpaid.map(inv=><div key={inv.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:mob?"10px 12px":"12px 14px",background:C.cardH,borderRadius:10,border:`1px solid ${inv.status==="overdue"?C.rd+"30":C.brd}`,gap:10,flexWrap:"wrap"}}>
-          <div style={{display:"flex",alignItems:"center",gap:10,flex:"1 1 auto",minWidth:0}} onClick={()=>{navigate("invoices",inv)}}>
-            <div style={{width:36,height:36,borderRadius:9,background:inv.status==="overdue"?C.rs:C.as,display:"flex",alignItems:"center",justifyContent:"center",color:inv.status==="overdue"?C.rd:C.ac,flexShrink:0}}><IcShip size={16}/></div>
-            <div style={{minWidth:0,cursor:"pointer"}}>
-              <div style={{fontSize:14,fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{inv.vessel}</div>
-              <div style={{fontSize:12,color:C.td}}>{inv.id}</div>
-            </div>
-          </div>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{textAlign:"right"}}>
-              <div style={{fontSize:mob?14:15,fontWeight:700}}>{aed(inv.amount)}</div>
-              <Badge status={inv.status}/>
-            </div>
-            <Btn style={{padding:"8px 12px",fontSize:12}} onClick={()=>openPay(inv)}>Pay</Btn>
-          </div>
-        </div>)}
-      </div>
-    </Card>
+  const NPanel=({style:sx})=><div style={{background:C.sf,border:`1px solid ${C.brd}`,borderRadius:14,boxShadow:"0 20px 60px rgba(0,0,0,.6)",overflow:"hidden",...sx}}><div style={{padding:"14px 20px",borderBottom:`1px solid ${C.brd}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span style={{fontWeight:700,fontSize:14}}>Notifications</span>{unread>0&&<span style={{fontSize:11,fontWeight:600,color:C.ab,background:C.as,padding:"2px 8px",borderRadius:10}}>{unread} new</span>}</div>{nState.map(n=><div key={n.id} onClick={()=>nClick(n)} style={{padding:"13px 20px",borderBottom:`1px solid ${C.brd}06`,display:"flex",gap:10,cursor:"pointer",background:n.read?"transparent":C.cardH+"60"}}><span style={{width:8,height:8,borderRadius:"50%",background:n.color,marginTop:6,flexShrink:0}}/><div style={{flex:1}}><div style={{fontSize:13,lineHeight:1.4,color:n.read?C.ts:C.txt}}>{n.text}</div><div style={{display:"flex",justifyContent:"space-between",marginTop:4}}><span style={{fontSize:11,color:C.td}}>{n.time}</span><span style={{fontSize:11,color:C.ab,fontWeight:600}}>View →</span></div></div></div>)}</div>;
 
-    <Card><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}><h3 style={{fontSize:15,fontWeight:700,margin:0}}>Recent Payments</h3><Btn variant="ghost" style={{fontSize:13,padding:"6px 8px"}} onClick={()=>navigate("history")}>View All <IcChev size={14}/></Btn></div>
-      {txns.slice(0,3).map(t=><div key={t.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"11px 0",borderBottom:`1px solid ${C.brd}06`}}>
-        <div><div style={{fontSize:14,fontWeight:600}}>{t.vessel}</div><div style={{fontSize:12,color:C.td}}>{t.date} · {t.method}</div></div>
-        <div style={{textAlign:"right"}}><div style={{fontSize:14,fontWeight:700,color:C.gn}}>-{aed(t.amount)}</div><div style={{fontSize:11,color:C.td}}>{t.id}</div></div>
-      </div>)}
-    </Card>
-
-    <Card><h3 style={{fontSize:15,fontWeight:700,margin:"0 0 14px"}}>My Vessels at Port</h3>
-      <div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr 1fr",gap:10}}>
-        {[{n:"MSC AURORA",v:"VA-2843E",b:"T2-B4",s:"Alongside — Discharging",c:"342 moves"},{n:"MSC DIANA",v:"VD-1190S",b:"Departed",s:"Sailed 2026-03-08",c:"500 moves"},{n:"MSC FANTASIA",v:"VF-0888W",b:"Expected T1-B1",s:"ETA 2026-03-16",c:"~480 planned"}].map((v,i)=>
-          <div key={i} style={{padding:"14px 16px",background:C.cardH,borderRadius:10,border:`1px solid ${C.brd}`}}>
-            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
-              <div style={{width:32,height:32,borderRadius:8,background:C.as,display:"flex",alignItems:"center",justifyContent:"center",color:C.ab}}><IcShip size={15}/></div>
-              <div><div style={{fontSize:14,fontWeight:700}}>{v.n}</div><div style={{fontSize:11,color:C.td}}>{v.v}</div></div>
-            </div>
-            {[{l:"Berth",x:v.b},{l:"Status",x:v.s},{l:"Containers",x:v.c}].map((r,j)=><div key={j} style={{display:"flex",justifyContent:"space-between",fontSize:12,padding:"2px 0"}}><span style={{color:C.td}}>{r.l}</span><span style={{fontWeight:600,color:C.ts}}>{r.x}</span></div>)}
-          </div>
-        )}
-      </div>
-    </Card>
+  const Home=()=><div style={{display:"flex",flexDirection:"column",gap}}><div className="fu" style={{background:`linear-gradient(135deg,${C.card},#0C2340)`,borderRadius:14,border:`1px solid ${C.brdL}`,padding:mob?"18px":"22px 24px",position:"relative",overflow:"hidden"}}><div style={{position:"absolute",right:-10,top:-20,opacity:.04,fontSize:mob?120:200}}>⚓</div><div style={{position:"relative"}}><div style={{fontSize:13,color:C.ts,marginBottom:3}}>Welcome back,</div><h2 style={{fontSize:mob?20:26,fontWeight:800,margin:"0 0 2px",letterSpacing:"-.02em"}}>{cust.contact}</h2><div style={{fontSize:mob?12:14,color:C.ts}}>{cust.name}</div></div></div>
+    <div style={{display:"grid",gridTemplateColumns:mob?"1fr 1fr":"repeat(4,1fr)",gap:mob?10:14}}>{[{l:"Outstanding",v:aed(totalOut),c:C.ab,sp:[180000,195000,230000,215000,210000,totalOut]},{l:"Overdue",v:aed(totalOver),c:C.rd,sp:[40000,60000,90000,120000,130000,totalOver]},{l:"Paid (30d)",v:aed(totalPaid),c:C.gn,sp:[95000,110000,140000,155000,170000,totalPaid]},{l:"Credit Left",v:aed(cust.creditLimit-cust.creditUsed),c:C.tl,sp:[200000,240000,280000,300000,290000,cust.creditLimit-cust.creditUsed],s:Math.round(cust.creditUsed/cust.creditLimit*100)+"% used"}].map((k,i)=><div key={i} className={`fu fu${i+1}`} style={{background:C.card,borderRadius:12,border:`1px solid ${C.brd}`,padding:mob?"14px":"18px 20px"}}><div style={{fontSize:11,color:C.ts,marginBottom:6,fontWeight:500}}>{k.l}</div><div style={{fontSize:mob?16:22,fontWeight:800,letterSpacing:"-.02em"}}>{k.v}</div>{k.s&&<div style={{fontSize:11,color:C.td,marginTop:2}}>{k.s}</div>}<div style={{marginTop:8}}><Spark data={k.sp} color={k.c} w={mob?100:110}/></div></div>)}</div>
+    <Card><h3 style={{fontSize:15,fontWeight:700,margin:"0 0 14px"}}>Action Required</h3><div style={{display:"flex",flexDirection:"column",gap:8}}>{unpaid.map(inv=><div key={inv.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:mob?"10px 12px":"12px 14px",background:C.cardH,borderRadius:10,border:`1px solid ${inv.status==="overdue"?C.rd+"30":C.brd}`,gap:10,flexWrap:"wrap"}}><div style={{display:"flex",alignItems:"center",gap:10,flex:"1 1 auto",minWidth:0,cursor:"pointer"}} onClick={()=>nav("invoices",inv)}><div style={{width:36,height:36,borderRadius:9,background:inv.status==="overdue"?C.rs:C.as,display:"flex",alignItems:"center",justifyContent:"center",color:inv.status==="overdue"?C.rd:C.ac,flexShrink:0}}><IcShip size={16}/></div><div style={{minWidth:0}}><div style={{fontSize:14,fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{inv.vessel}</div><div style={{fontSize:12,color:C.td}}>{inv.id}</div></div></div><div style={{display:"flex",alignItems:"center",gap:10}}><div style={{textAlign:"right"}}><div style={{fontSize:mob?14:15,fontWeight:700}}>{aed(inv.amount)}</div><Badge status={inv.status}/></div><Btn style={{padding:"8px 12px",fontSize:12}} onClick={()=>openPay(inv)}>Pay</Btn></div></div>)}</div></Card>
+    <Card><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}><h3 style={{fontSize:15,fontWeight:700,margin:0}}>Recent Payments</h3><Btn variant="ghost" style={{fontSize:13,padding:"6px 8px"}} onClick={()=>nav("history")}>View All <IcChev size={14}/></Btn></div>{txns.slice(0,3).map(t=><div key={t.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"11px 0",borderBottom:`1px solid ${C.brd}06`}}><div><div style={{fontSize:14,fontWeight:600}}>{t.vessel}</div><div style={{fontSize:12,color:C.td}}>{t.date} · {t.method}</div></div><div style={{textAlign:"right"}}><div style={{fontSize:14,fontWeight:700,color:C.gn}}>-{aed(t.amount)}</div><div style={{fontSize:11,color:C.td}}>{t.id}</div></div></div>)}</Card>
+    <Card><h3 style={{fontSize:15,fontWeight:700,margin:"0 0 14px"}}>My Vessels at Port</h3><div style={{display:"grid",gridTemplateColumns:mob?"1fr":"1fr 1fr 1fr",gap:10}}>{vessels.map((v,i)=><div key={i} style={{padding:"14px 16px",background:C.cardH,borderRadius:10,border:`1px solid ${C.brd}`}}><div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}><div style={{width:32,height:32,borderRadius:8,background:C.as,display:"flex",alignItems:"center",justifyContent:"center",color:C.ab}}><IcShip size={15}/></div><div><div style={{fontSize:14,fontWeight:700}}>{v.n}</div><div style={{fontSize:11,color:C.td}}>{v.v}</div></div></div>{[{l:"Berth",x:v.b},{l:"Status",x:v.s},{l:"Containers",x:v.c}].map((r,j)=><div key={j} style={{display:"flex",justifyContent:"space-between",fontSize:12,padding:"2px 0"}}><span style={{color:C.td}}>{r.l}</span><span style={{fontWeight:600,color:C.ts}}>{r.x}</span></div>)}</div>)}</div></Card>
   </div>;
 
-  /* ── INVOICE DETAIL ── */
-  const InvDetail=({inv})=><div style={{display:"flex",flexDirection:"column",gap:16}}>
-    <Btn variant="ghost" style={{alignSelf:"flex-start",padding:"6px 0",fontSize:13}} onClick={goBack}><IcBack size={16}/> Back</Btn>
-    <Card>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:8}}>
-        <div><div style={{fontSize:11,color:C.td,fontWeight:700,letterSpacing:"0.06em",marginBottom:4}}>TAX INVOICE</div><h2 style={{fontSize:mob?20:24,fontWeight:800,margin:"0 0 4px"}}>{inv.id}</h2><div style={{color:C.ts,fontSize:13}}>Issued to: {cust.name}</div></div>
-        <Badge status={inv.status}/>
-      </div>
-      <div style={{display:"grid",gridTemplateColumns:mob?"1fr 1fr":"1fr 1fr 1fr 1fr",gap:14,padding:"16px 0",borderTop:`1px solid ${C.brd}`,borderBottom:`1px solid ${C.brd}`,marginBottom:20}}>
-        {[{l:"Vessel",v:inv.vessel,s:inv.voyage},{l:"Berth",v:inv.berth},{l:"Containers",v:inv.containers>0?inv.containers+" units":"N/A"},{l:"Due Date",v:inv.due}].map((f,i)=>
-          <div key={i}><div style={{fontSize:10,color:C.td,fontWeight:600,marginBottom:4,textTransform:"uppercase",letterSpacing:"0.06em"}}>{f.l}</div><div style={{fontSize:14,fontWeight:700}}>{f.v}</div>{f.s&&<div style={{fontSize:12,color:C.ts}}>{f.s}</div>}</div>
-        )}
-      </div>
-      <h4 style={{fontSize:11,fontWeight:700,color:C.td,margin:"0 0 10px",textTransform:"uppercase",letterSpacing:"0.06em"}}>Charges Breakdown</h4>
-      {inv.services.map((s,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",padding:"10px 0",borderBottom:`1px solid ${C.brd}06`,fontSize:mob?13:14}}><span style={{flex:1,marginRight:12}}>{s.name}</span><span style={{fontWeight:600,whiteSpace:"nowrap"}}>{aed(s.amt)}</span></div>)}
-      <div style={{display:"flex",justifyContent:"space-between",padding:"16px 0 0"}}><span style={{fontSize:16,fontWeight:800}}>Total Due</span><span style={{fontSize:20,fontWeight:800,color:C.ab}}>{aed(inv.amount)}</span></div>
-    </Card>
-    {inv.status!=="paid"
-      ? <Btn style={{width:"100%",justifyContent:"center",padding:14,fontSize:15}} onClick={()=>openPay(inv)}><IcWallet size={18}/> Pay Now — {aed(inv.amount)}</Btn>
-      : <div style={{display:"flex",alignItems:"center",gap:10,padding:14,background:C.gs,borderRadius:10,color:C.gn,fontWeight:700,justifyContent:"center"}}><IcCheck size={18}/> Paid</div>
-    }
-    <Card style={{background:C.ac+"08",border:`1px solid ${C.ac}18`}}>
-      <div style={{fontSize:12,fontWeight:700,color:C.ab,marginBottom:4}}>From: Khorfakkan Commercial Terminals</div>
-      <div style={{fontSize:12,color:C.ts,lineHeight:1.7}}>Port of Khorfakkan, P.O. Box 787<br/>Sharjah, UAE · +971 9 222 8000</div>
-    </Card>
+  const InvDet=({inv})=><div style={{display:"flex",flexDirection:"column",gap:16}}><Btn variant="ghost" style={{alignSelf:"flex-start",padding:"6px 0",fontSize:13}} onClick={goBack}><IcBack size={16}/> Back</Btn><Card><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:8}}><div><div style={{fontSize:11,color:C.td,fontWeight:700,letterSpacing:".06em",marginBottom:4}}>TAX INVOICE</div><h2 style={{fontSize:mob?20:24,fontWeight:800,margin:"0 0 4px"}}>{inv.id}</h2><div style={{color:C.ts,fontSize:13}}>Issued to: {cust.name}</div></div><Badge status={inv.status}/></div><div style={{display:"grid",gridTemplateColumns:mob?"1fr 1fr":"1fr 1fr 1fr 1fr",gap:14,padding:"16px 0",borderTop:`1px solid ${C.brd}`,borderBottom:`1px solid ${C.brd}`,marginBottom:20}}>{[{l:"Vessel",v:inv.vessel,s:inv.voyage},{l:"Berth",v:inv.berth},{l:"Containers",v:inv.containers>0?inv.containers+" units":"N/A"},{l:"Due",v:inv.due}].map((f,i)=><div key={i}><div style={{fontSize:10,color:C.td,fontWeight:600,marginBottom:4,textTransform:"uppercase",letterSpacing:".06em"}}>{f.l}</div><div style={{fontSize:14,fontWeight:700}}>{f.v}</div>{f.s&&<div style={{fontSize:12,color:C.ts}}>{f.s}</div>}</div>)}</div><h4 style={{fontSize:11,fontWeight:700,color:C.td,margin:"0 0 10px",textTransform:"uppercase",letterSpacing:".06em"}}>Charges Breakdown</h4>{inv.services.map((s,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",padding:"10px 0",borderBottom:`1px solid ${C.brd}06`,fontSize:mob?13:14}}><span style={{flex:1,marginRight:12}}>{s.name}</span><span style={{fontWeight:600,whiteSpace:"nowrap"}}>{aed(s.amt)}</span></div>)}<div style={{display:"flex",justifyContent:"space-between",padding:"16px 0 0"}}><span style={{fontSize:16,fontWeight:800}}>Total Due</span><span style={{fontSize:20,fontWeight:800,color:C.ab}}>{aed(inv.amount)}</span></div></Card>{inv.status!=="paid"?<Btn style={{width:"100%",justifyContent:"center",padding:14,fontSize:15}} onClick={()=>openPay(inv)}><IcWallet size={18}/> Pay Now — {aed(inv.amount)}</Btn>:<div style={{display:"flex",alignItems:"center",gap:10,padding:14,background:C.gs,borderRadius:10,color:C.gn,fontWeight:700,justifyContent:"center"}}><IcCheck size={18}/> Paid</div>}<Card style={{background:C.ac+"08",border:`1px solid ${C.ac}18`}}><div style={{fontSize:12,fontWeight:700,color:C.ab,marginBottom:4}}>From: Khorfakkan Commercial Terminals</div><div style={{fontSize:12,color:C.ts,lineHeight:1.7}}>Port of Khorfakkan, P.O. Box 787, Sharjah, UAE</div></Card></div>;
+
+  const Invoices=()=><div style={{display:"flex",flexDirection:"column",gap:16}}><div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}><div style={{position:"relative",flex:"1 1 200px"}}><div style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",color:C.td}}><IcSearch size={15}/></div><input className="li" style={{paddingLeft:36,padding:"10px 12px 10px 36px",fontSize:14}} placeholder="Search invoices..." value={search} onChange={e=>setSearch(e.target.value)}/></div><div style={{display:"flex",gap:2,background:C.cardH,borderRadius:8,padding:2}}>{["all","pending","overdue","paid"].map(f=><button key={f} onClick={()=>setFilter(f)} style={{padding:mob?"6px 10px":"7px 14px",borderRadius:7,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,textTransform:"capitalize",background:filter===f?C.ac:"transparent",color:filter===f?"#fff":C.ts,fontFamily:"inherit"}}>{f==="all"?"All":f}</button>)}</div></div>
+    {selInv?<InvDet inv={selInv}/>:<div style={{display:"flex",flexDirection:"column",gap:8}}>{filtered.map(inv=><Card key={inv.id} style={{padding:"14px 16px",cursor:"pointer"}} onClick={()=>setSelInv(inv)}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}><div style={{display:"flex",alignItems:"center",gap:10,flex:1,minWidth:0}}><div style={{width:36,height:36,borderRadius:9,background:inv.status==="overdue"?C.rs:C.as,display:"flex",alignItems:"center",justifyContent:"center",color:inv.status==="overdue"?C.rd:C.ac,flexShrink:0}}><IcShip size={16}/></div><div style={{minWidth:0}}><div style={{fontSize:14,fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{inv.vessel}</div><div style={{fontSize:12,color:C.td}}>{inv.id} · {inv.type}</div></div></div><Badge status={inv.status}/></div><div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{fontSize:12,color:C.td}}>Due {inv.due}</div><div style={{fontSize:16,fontWeight:800}}>{aed(inv.amount)}</div></div>{inv.status!=="paid"&&<Btn style={{width:"100%",justifyContent:"center",padding:"10px",fontSize:13,marginTop:10}} onClick={e=>{e.stopPropagation();openPay(inv)}}>Pay Now</Btn>}</Card>)}{filtered.length===0&&<div style={{padding:40,textAlign:"center",color:C.td}}>No invoices found</div>}</div>}
   </div>;
 
-  /* ── INVOICES ── */
-  const InvoicesView=()=><div style={{display:"flex",flexDirection:"column",gap:16}}>
-    <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
-      <div style={{position:"relative",flex:"1 1 200px"}}>
-        <div style={{position:"absolute",left:12,top:"50%",transform:"translateY(-50%)",color:C.td}}><IcSearch size={15}/></div>
-        <input style={{background:C.cardH,border:`1px solid ${C.brd}`,borderRadius:10,padding:"10px 12px 10px 36px",color:C.txt,fontSize:14,outline:"none",width:"100%",fontFamily:"inherit"}} placeholder="Search invoices..." value={search} onChange={e=>setSearch(e.target.value)}/>
-      </div>
-      <div style={{display:"flex",gap:2,background:C.cardH,borderRadius:8,padding:2}}>
-        {["all","pending","overdue","paid"].map(f=><button key={f} onClick={()=>setFilter(f)} style={{padding:mob?"6px 10px":"7px 14px",borderRadius:7,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,textTransform:"capitalize",background:filter===f?C.ac:"transparent",color:filter===f?"#fff":C.ts,fontFamily:"inherit"}}>{mob&&f==="all"?"All":f}</button>)}
-      </div>
-    </div>
-    {selInv?<InvDetail inv={selInv}/>:
-      <div style={{display:"flex",flexDirection:"column",gap:8}}>
-        {filtered.map(inv=><Card key={inv.id} style={{padding:"14px 16px",cursor:"pointer"}} onClick={()=>setSelInv(inv)}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
-            <div style={{display:"flex",alignItems:"center",gap:10,flex:1,minWidth:0}}>
-              <div style={{width:36,height:36,borderRadius:9,background:inv.status==="overdue"?C.rs:C.as,display:"flex",alignItems:"center",justifyContent:"center",color:inv.status==="overdue"?C.rd:C.ac,flexShrink:0}}><IcShip size={16}/></div>
-              <div style={{minWidth:0}}><div style={{fontSize:14,fontWeight:700,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{inv.vessel}</div><div style={{fontSize:12,color:C.td}}>{inv.id} · {inv.type}</div></div>
-            </div>
-            <Badge status={inv.status}/>
-          </div>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <div style={{fontSize:12,color:C.td}}>Due {inv.due} · {inv.containers>0?inv.containers+" containers":"—"}</div>
-            <div style={{fontSize:16,fontWeight:800}}>{aed(inv.amount)}</div>
-          </div>
-          {inv.status!=="paid"&&<Btn style={{width:"100%",justifyContent:"center",padding:"10px",fontSize:13,marginTop:10}} onClick={e=>{e.stopPropagation();openPay(inv)}}>Pay Now</Btn>}
-        </Card>)}
-        {filtered.length===0&&<div style={{padding:40,textAlign:"center",color:C.td}}>No invoices found</div>}
-      </div>
-    }
-  </div>;
-
-  /* ── PAY ── */
-  const PayView=()=><div style={{display:"flex",flexDirection:"column",gap:16}}>
-    <Card><h3 style={{fontSize:16,fontWeight:700,margin:"0 0 4px"}}>Select Invoices to Pay</h3><p style={{fontSize:13,color:C.ts,margin:"0 0 16px"}}>Select one or multiple invoices</p>
-      <div style={{display:"flex",flexDirection:"column",gap:8}}>
-        {unpaid.map(inv=>{const sel=selPay.includes(inv.id);return<div key={inv.id} onClick={()=>setSelPay(p=>sel?p.filter(x=>x!==inv.id):[...p,inv.id])} style={{display:"flex",alignItems:"center",gap:12,padding:"14px 16px",borderRadius:12,cursor:"pointer",border:`2px solid ${sel?C.ac:C.brd}`,background:sel?C.as:"transparent",transition:"all 0.15s"}}>
-          <div style={{width:22,height:22,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",border:`2px solid ${sel?C.ac:C.brdL}`,background:sel?C.ac:"transparent",flexShrink:0,color:"#fff"}}>{sel&&<IcCheck size={14}/>}</div>
-          <div style={{flex:1,minWidth:0}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><span style={{fontWeight:700,fontSize:14}}>{inv.vessel}</span><span style={{fontWeight:800,fontSize:15}}>{aed(inv.amount)}</span></div>
-            <div style={{display:"flex",justifyContent:"space-between",marginTop:3}}><span style={{fontSize:12,color:C.td}}>{inv.id} · Due {inv.due}</span><Badge status={inv.status}/></div>
-          </div>
-        </div>})}
-      </div>
-    </Card>
-
-    {selPay.length>0&&<Card>
-      <h3 style={{fontSize:15,fontWeight:700,margin:"0 0 16px"}}>Payment Summary</h3>
-      {selPay.map(id=>{const inv=invs.find(i=>i.id===id);return<div key={id} style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:6}}><span style={{color:C.ts}}>{inv.vessel}</span><span style={{fontWeight:600}}>{aed(inv.amount)}</span></div>})}
-      <div style={{display:"flex",justifyContent:"space-between",padding:"14px 0 0",marginTop:10,borderTop:`1px solid ${C.brd}`}}><span style={{fontSize:16,fontWeight:800}}>Total</span><span style={{fontSize:22,fontWeight:800,color:C.ab}}>{aed(batchTot)}</span></div>
-      <div style={{fontSize:11,color:C.td,fontWeight:600,margin:"18px 0 8px",textTransform:"uppercase",letterSpacing:"0.06em"}}>Payment Method</div>
-      <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:18}}>
-        {[{id:"wire",l:"Wire Transfer / SWIFT",s:"1-3 business days"},{id:"lc",l:"Letter of Credit",s:"Bank-backed guarantee"},{id:"card",l:"Credit / Debit Card",s:"Instant · 2.5% surcharge"},{id:"guarantee",l:"Bank Guarantee",s:"Pre-approved facility"}].map(m=>
-          <div key={m.id} onClick={()=>setPayMethod(m.id)} style={{padding:"11px 14px",borderRadius:10,cursor:"pointer",border:`2px solid ${payMethod===m.id?C.ac:C.brd}`,background:payMethod===m.id?C.as:"transparent"}}><div style={{fontSize:14,fontWeight:600}}>{m.l}</div><div style={{fontSize:12,color:C.td}}>{m.s}</div></div>
-        )}
-      </div>
+  const Pay=()=><div style={{display:"flex",flexDirection:"column",gap:16}}><Card><h3 style={{fontSize:16,fontWeight:700,margin:"0 0 4px"}}>Select Invoices to Pay</h3><p style={{fontSize:13,color:C.ts,margin:"0 0 16px"}}>Select one or multiple invoices</p><div style={{display:"flex",flexDirection:"column",gap:8}}>{unpaid.map(inv=>{const sel=selPay.includes(inv.id);return<div key={inv.id} onClick={()=>setSelPay(p=>sel?p.filter(x=>x!==inv.id):[...p,inv.id])} style={{display:"flex",alignItems:"center",gap:12,padding:"14px 16px",borderRadius:12,cursor:"pointer",border:`2px solid ${sel?C.ac:C.brd}`,background:sel?C.as:"transparent"}}><div style={{width:22,height:22,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",border:`2px solid ${sel?C.ac:C.brdL}`,background:sel?C.ac:"transparent",flexShrink:0,color:"#fff"}}>{sel&&<IcCheck size={14}/>}</div><div style={{flex:1,minWidth:0}}><div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontWeight:700,fontSize:14}}>{inv.vessel}</span><span style={{fontWeight:800,fontSize:15}}>{aed(inv.amount)}</span></div><div style={{display:"flex",justifyContent:"space-between",marginTop:3}}><span style={{fontSize:12,color:C.td}}>{inv.id}</span><Badge status={inv.status}/></div></div></div>})}</div></Card>
+    {selPay.length>0&&<Card><h3 style={{fontSize:15,fontWeight:700,margin:"0 0 16px"}}>Payment Summary</h3>{selPay.map(id=>{const inv=invs.find(i=>i.id===id);return<div key={id} style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:6}}><span style={{color:C.ts}}>{inv.vessel}</span><span style={{fontWeight:600}}>{aed(inv.amount)}</span></div>})}<div style={{display:"flex",justifyContent:"space-between",padding:"14px 0 0",marginTop:10,borderTop:`1px solid ${C.brd}`}}><span style={{fontSize:16,fontWeight:800}}>Total</span><span style={{fontSize:22,fontWeight:800,color:C.ab}}>{aed(batchTot)}</span></div>
+      <div style={{fontSize:11,color:C.td,fontWeight:600,margin:"18px 0 8px",textTransform:"uppercase",letterSpacing:".06em"}}>Payment Method</div><div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:18}}>{[{id:"wire",l:"Wire Transfer / SWIFT",s:"1-3 business days"},{id:"lc",l:"Letter of Credit",s:"Bank-backed guarantee"},{id:"card",l:"Credit / Debit Card",s:"Instant · 2.5% surcharge"},{id:"guarantee",l:"Bank Guarantee",s:"Pre-approved facility"}].map(m=><div key={m.id} onClick={()=>setPayMethod(m.id)} style={{padding:"11px 14px",borderRadius:10,cursor:"pointer",border:`2px solid ${payMethod===m.id?C.ac:C.brd}`,background:payMethod===m.id?C.as:"transparent"}}><div style={{fontSize:14,fontWeight:600}}>{m.l}</div><div style={{fontSize:12,color:C.td}}>{m.s}</div></div>)}</div>
       <Btn style={{width:"100%",justifyContent:"center",padding:14,fontSize:15}} onClick={()=>{setPayInv(invs.find(i=>i.id===selPay[0]));setPayStep(0);setPayModal(true)}}>Proceed to Pay {aed(batchTot)}</Btn>
     </Card>}
   </div>;
 
-  /* ── HISTORY ── */
-  const HistoryView=()=><div style={{display:"flex",flexDirection:"column",gap:16}}>
-    <div><h3 style={{fontSize:17,fontWeight:700,margin:0}}>Payment History</h3><p style={{fontSize:13,color:C.ts,margin:"4px 0 0"}}>All payments by {cust.short}</p></div>
-    {txns.map(t=><Card key={t.id} style={{padding:"14px 16px"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
-        <div><div style={{fontSize:14,fontWeight:700}}>{t.vessel}</div><div style={{fontSize:12,color:C.td}}>{t.invoice}</div></div>
-        <Badge status={t.status}/>
-      </div>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-        <div style={{fontSize:12,color:C.td}}>{t.date} · {t.method}</div>
-        <div style={{fontSize:16,fontWeight:800,color:C.gn}}>{aed(t.amount)}</div>
-      </div>
-      <div style={{fontSize:11,color:C.td,marginTop:4,fontFamily:"monospace"}}>{t.ref}</div>
-    </Card>)}
-  </div>;
+  const History=()=><div style={{display:"flex",flexDirection:"column",gap:16}}><div><h3 style={{fontSize:17,fontWeight:700,margin:0}}>Payment History</h3><p style={{fontSize:13,color:C.ts,margin:"4px 0 0"}}>All payments by {cust.short}</p></div>{txns.map(t=><Card key={t.id} style={{padding:"14px 16px"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}><div><div style={{fontSize:14,fontWeight:700}}>{t.vessel}</div><div style={{fontSize:12,color:C.td}}>{t.invoice}</div></div><Badge status={t.status}/></div><div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{fontSize:12,color:C.td}}>{t.date} · {t.method}</div><div style={{fontSize:16,fontWeight:800,color:C.gn}}>{aed(t.amount)}</div></div><div style={{fontSize:11,color:C.td,marginTop:4,fontFamily:"monospace"}}>{t.ref}</div></Card>)}</div>;
 
-  /* ── STATEMENTS ── */
-  const StatementsView=()=><div style={{display:"flex",flexDirection:"column",gap:16}}>
-    <div><h3 style={{fontSize:17,fontWeight:700,margin:0}}>Statements</h3><p style={{fontSize:13,color:C.ts,margin:"4px 0 0"}}>Download monthly statements</p></div>
-    {[{p:"March 2026",st:"Current",inv:3,a:totalOut},{p:"February 2026",st:"Closed",inv:4,a:180885},{p:"January 2026",st:"Closed",inv:3,a:142300},{p:"December 2025",st:"Closed",inv:5,a:215600}].map((s,i)=>
-      <Card key={i} style={{padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
-        <div style={{display:"flex",alignItems:"center",gap:12,flex:1,minWidth:0}}>
-          <div style={{width:38,height:38,borderRadius:9,background:C.as,display:"flex",alignItems:"center",justifyContent:"center",color:C.ac,flexShrink:0}}><IcFile size={17}/></div>
-          <div style={{minWidth:0}}><div style={{fontSize:14,fontWeight:700}}>{s.p}</div><div style={{fontSize:12,color:C.td}}>{s.inv} invoices · {aed(s.a)}</div></div>
-        </div>
-        <Btn variant="outline" style={{padding:"8px 12px",fontSize:12,flexShrink:0}}><IcDown size={14}/> PDF</Btn>
-      </Card>
-    )}
-    <Card><h4 style={{fontSize:14,fontWeight:700,margin:"0 0 14px"}}>Account Details</h4>
-      {[{l:"Account",v:cust.name},{l:"ID",v:cust.id},{l:"Contact",v:cust.contact},{l:"Credit Limit",v:aed(cust.creditLimit)},{l:"Credit Used",v:aed(cust.creditUsed)}].map((r,i)=>
-        <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:`1px solid ${C.brd}06`,fontSize:13}}><span style={{color:C.td}}>{r.l}</span><span style={{fontWeight:600,textAlign:"right",maxWidth:"60%"}}>{r.v}</span></div>
-      )}
-    </Card>
-  </div>;
+  const Statements=()=><div style={{display:"flex",flexDirection:"column",gap:16}}><div><h3 style={{fontSize:17,fontWeight:700,margin:0}}>Statements</h3></div>{[{p:"March 2026",st:"Current",a:totalOut},{p:"February 2026",st:"Closed",a:180885},{p:"January 2026",st:"Closed",a:142300}].map((s,i)=><Card key={i} style={{padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}><div style={{display:"flex",alignItems:"center",gap:12,flex:1,minWidth:0}}><div style={{width:38,height:38,borderRadius:9,background:C.as,display:"flex",alignItems:"center",justifyContent:"center",color:C.ac,flexShrink:0}}><IcFile size={17}/></div><div style={{minWidth:0}}><div style={{fontSize:14,fontWeight:700}}>{s.p}</div><div style={{fontSize:12,color:C.td}}>{aed(s.a)}</div></div></div><Btn variant="outline" style={{padding:"8px 12px",fontSize:12,flexShrink:0}}><IcDown size={14}/> PDF</Btn></Card>)}<Card><h4 style={{fontSize:14,fontWeight:700,margin:"0 0 14px"}}>Account Details</h4>{[{l:"Account",v:cust.name},{l:"ID",v:cust.id},{l:"Contact",v:cust.contact},{l:"Credit Limit",v:aed(cust.creditLimit)},{l:"Credit Used",v:aed(cust.creditUsed)}].map((r,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:`1px solid ${C.brd}06`,fontSize:13}}><span style={{color:C.td}}>{r.l}</span><span style={{fontWeight:600,textAlign:"right",maxWidth:"60%"}}>{r.v}</span></div>)}</Card></div>;
 
-  /* ── SUPPORT ── */
-  const SupportView=()=><div style={{display:"flex",flexDirection:"column",gap:16}}>
-    <div><h3 style={{fontSize:17,fontWeight:700,margin:0}}>Help & Support</h3></div>
-    {[{t:"Invoice Queries",d:"Dispute charges or request breakdowns",icon:IcInv,c:C.ac},{t:"Payment Issues",d:"Payment not reflected or refund requests",icon:IcWallet,c:C.gn},{t:"Account & Access",d:"Update details or manage team members",icon:IcUser,c:C.yl},{t:"Tariff & Pricing",d:"Latest tariff schedule and rate info",icon:IcBox,c:C.tl}].map((item,i)=>
-      <Card key={i} style={{cursor:"pointer"}}>
-        <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
-          <div style={{width:40,height:40,borderRadius:10,background:item.c+"15",display:"flex",alignItems:"center",justifyContent:"center",color:item.c,flexShrink:0}}><item.icon size={17}/></div>
-          <div><div style={{fontSize:14,fontWeight:700,marginBottom:3}}>{item.t}</div><div style={{fontSize:13,color:C.ts,lineHeight:1.4}}>{item.d}</div></div>
-        </div>
-      </Card>
-    )}
-    <Card style={{background:C.ac+"08",border:`1px solid ${C.ac}20`}}>
-      <div style={{fontSize:14,fontWeight:700,marginBottom:4}}>24/7 Support</div>
-      <div style={{fontSize:13,color:C.ts}}>Call <strong style={{color:C.txt}}>+971 9 222 8000</strong> or email <strong style={{color:C.ab}}>support@gulftainer.com</strong></div>
-    </Card>
-  </div>;
+  const Support=()=><div style={{display:"flex",flexDirection:"column",gap:16}}><div><h3 style={{fontSize:17,fontWeight:700,margin:0}}>Help & Support</h3></div>{[{t:"Invoice Queries",d:"Dispute charges or request breakdowns",icon:IcInv,c:C.ac},{t:"Payment Issues",d:"Payment not reflected or refunds",icon:IcWallet,c:C.gn},{t:"Account & Access",d:"Update details or manage team",icon:IcUser,c:C.yl},{t:"Tariff & Pricing",d:"Latest tariff schedule and rates",icon:IcBox,c:C.tl}].map((item,i)=><Card key={i} style={{cursor:"pointer"}}><div style={{display:"flex",alignItems:"flex-start",gap:12}}><div style={{width:40,height:40,borderRadius:10,background:item.c+"15",display:"flex",alignItems:"center",justifyContent:"center",color:item.c,flexShrink:0}}><item.icon size={17}/></div><div><div style={{fontSize:14,fontWeight:700,marginBottom:3}}>{item.t}</div><div style={{fontSize:13,color:C.ts,lineHeight:1.4}}>{item.d}</div></div></div></Card>)}<Card style={{background:C.ac+"08",border:`1px solid ${C.ac}20`}}><div style={{fontSize:14,fontWeight:700,marginBottom:4}}>24/7 Support</div><div style={{fontSize:13,color:C.ts}}>Call <strong style={{color:C.txt}}>+971 9 222 8000</strong> or email <strong style={{color:C.ab}}>support@gulftainer.com</strong></div></Card></div>;
 
-  /* ── PAY MODAL ── */
-  const PayModal=()=>{
-    const inv=payInv||invs[0];
-    const amt=selPay.length>0&&tab==="pay"?batchTot:inv.amount;
-    const steps=["Verify","Payment Info","Review","Done"];
-    return <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.8)",display:"flex",alignItems:mob?"flex-end":"center",justifyContent:"center",zIndex:100,backdropFilter:"blur(6px)"}} onClick={()=>setPayModal(false)}>
-      <div onClick={e=>e.stopPropagation()} style={{background:C.sf,borderRadius:mob?"20px 20px 0 0":"20px",width:mob?"100%":"540px",maxHeight:mob?"92vh":"90vh",overflow:"auto",border:`1px solid ${C.brd}`,boxShadow:"0 -10px 60px rgba(0,0,0,0.5)"}}>
-        <div style={{padding:mob?"20px 20px 0":"24px 32px 0",position:"sticky",top:0,background:C.sf,zIndex:2}}>
-          {mob&&<div style={{width:40,height:4,borderRadius:2,background:C.brdL,margin:"0 auto 16px"}}/>}
-          <div style={{display:"flex",justifyContent:"space-between",marginBottom:20}}>
-            <h3 style={{fontSize:mob?18:20,fontWeight:800,margin:0}}>{payStep===3?"Payment Submitted":"Make Payment"}</h3>
-            <button onClick={()=>setPayModal(false)} style={{background:"none",border:"none",color:C.ts,cursor:"pointer",padding:4}}><IcX size={20}/></button>
-          </div>
-          <div style={{display:"flex",gap:6,marginBottom:22}}>
-            {steps.map((s,i)=><div key={i} style={{flex:1}}><div style={{height:3,borderRadius:2,background:i<=payStep?C.ac:C.brd,transition:"background 0.3s",marginBottom:5}}/><span style={{fontSize:10,color:i<=payStep?C.ab:C.td,fontWeight:600}}>{s}</span></div>)}
-          </div>
-        </div>
-        <div style={{padding:mob?"0 20px 24px":"0 32px 28px"}}>
-          {payStep===0&&<div style={{display:"flex",flexDirection:"column",gap:12}}>
-            <div style={{background:C.card,borderRadius:12,padding:16}}><div style={{fontSize:12,color:C.td,marginBottom:3}}>Paying as</div><div style={{fontSize:15,fontWeight:700}}>{cust.short}</div><div style={{fontSize:12,color:C.ts}}>{cust.id}</div></div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-              <div style={{background:C.card,borderRadius:12,padding:16}}><div style={{fontSize:12,color:C.td,marginBottom:3}}>Invoice(s)</div><div style={{fontSize:14,fontWeight:700}}>{selPay.length>1?selPay.length+" invoices":inv.id}</div></div>
-              <div style={{background:C.card,borderRadius:12,padding:16}}><div style={{fontSize:12,color:C.td,marginBottom:3}}>Amount</div><div style={{fontSize:mob?18:22,fontWeight:800,color:C.ab}}>{aed(amt)}</div></div>
-            </div>
-          </div>}
-          {payStep===1&&<div style={{display:"flex",flexDirection:"column",gap:12}}>
-            <div><label style={{fontSize:12,color:C.td,fontWeight:600,display:"block",marginBottom:5}}>Remitting Bank</label><input style={{background:C.cardH,border:`1px solid ${C.brd}`,borderRadius:10,padding:"10px 14px",color:C.txt,fontSize:14,outline:"none",width:"100%",fontFamily:"inherit"}} defaultValue="HSBC Holdings PLC"/></div>
-            <div><label style={{fontSize:12,color:C.td,fontWeight:600,display:"block",marginBottom:5}}>Account / IBAN</label><input style={{background:C.cardH,border:`1px solid ${C.brd}`,borderRadius:10,padding:"10px 14px",color:C.txt,fontSize:14,outline:"none",width:"100%",fontFamily:"inherit"}} defaultValue="GB82 WEST 1234 5698 7654 32"/></div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-              <div><label style={{fontSize:12,color:C.td,fontWeight:600,display:"block",marginBottom:5}}>SWIFT / BIC</label><input style={{background:C.cardH,border:`1px solid ${C.brd}`,borderRadius:10,padding:"10px 14px",color:C.txt,fontSize:14,outline:"none",width:"100%",fontFamily:"inherit"}} defaultValue="HSBCGB2LXXX"/></div>
-              <div><label style={{fontSize:12,color:C.td,fontWeight:600,display:"block",marginBottom:5}}>Currency</label><input style={{background:C.cardH,border:`1px solid ${C.brd}`,borderRadius:10,padding:"10px 14px",color:C.txt,fontSize:14,outline:"none",width:"100%",fontFamily:"inherit"}} value="AED" readOnly/></div>
-            </div>
-            <div style={{background:C.ac+"08",borderRadius:10,padding:"12px 14px",fontSize:12,color:C.ts,lineHeight:1.6}}><strong style={{color:C.ab}}>Beneficiary:</strong> Khorfakkan Commercial Terminal Operations<br/>IBAN: AE21 0331 0000 0198 7654 321<br/>SWIFT: EABORAEAXXX · Emirates NBD</div>
-          </div>}
-          {payStep===2&&<div style={{display:"flex",flexDirection:"column",gap:12}}>
-            <div style={{background:C.card,borderRadius:12,padding:16}}>
-              {[{l:"From",v:cust.short+" — HSBC · GB82...5432"},{l:"To",v:"Khorfakkan Commercial Terminals · AE21...4321"},{l:"Amount",v:aed(amt)},{l:"Reference",v:selPay.length>1?"BATCH":inv.id},{l:"Method",v:"Wire Transfer (SWIFT)"}].map((r,i)=>
-                <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<4?`1px solid ${C.brd}06`:"none",fontSize:13}}><span style={{color:C.td}}>{r.l}</span><span style={{fontWeight:600,textAlign:"right"}}>{r.v}</span></div>
-              )}
-            </div>
-            <div style={{background:C.yl+"12",border:`1px solid ${C.yl}25`,borderRadius:10,padding:"12px 14px",display:"flex",gap:8,alignItems:"flex-start"}}><IcAlert size={15}/><span style={{fontSize:12,color:C.yl,lineHeight:1.5}}>Wire transfers cannot be reversed once initiated.</span></div>
-          </div>}
-          {payStep===3&&<div style={{textAlign:"center",padding:"10px 0"}}>
-            <div style={{width:60,height:60,borderRadius:"50%",background:C.gs,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 18px",color:C.gn}}><IcCheck size={30}/></div>
-            <div style={{fontSize:14,color:C.ts,marginBottom:6}}>Payment instruction submitted</div>
-            <div style={{fontSize:26,fontWeight:800,marginBottom:4}}>{aed(amt)}</div>
-            <div style={{fontSize:12,color:C.td,marginBottom:18}}>Ref: TXN-90283</div>
-            <div style={{background:C.card,borderRadius:10,padding:"12px 16px",fontSize:13,color:C.ts,lineHeight:1.6,textAlign:"left"}}>Processing within 1-3 business days. Confirmation will be sent to {cust.email}.</div>
-          </div>}
-          <div style={{display:"flex",justifyContent:"space-between",marginTop:20,gap:10}}>
-            {payStep>0&&payStep<3?<Btn variant="outline" onClick={()=>setPayStep(s=>s-1)} style={{flex:mob?1:undefined}}>Back</Btn>:<div style={{flex:mob?1:undefined}}/>}
-            {payStep<3
-              ?<Btn onClick={()=>setPayStep(s=>s+1)} style={{flex:mob?1:undefined,justifyContent:"center"}}>{payStep===2?"Confirm & Submit":"Continue"}</Btn>
-              :<Btn onClick={()=>{setPayModal(false);goHome()}} style={{flex:mob?1:undefined,justifyContent:"center"}}>Done</Btn>
-            }
-          </div>
-        </div>
-      </div>
-    </div>;
-  };
+  const PMod=()=>{const inv=payInv||invs[0];const amt=selPay.length>0&&tab==="pay"?batchTot:inv.amount;const steps=["Verify","Payment Info","Review","Done"];return<div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.8)",display:"flex",alignItems:mob?"flex-end":"center",justifyContent:"center",zIndex:100,backdropFilter:"blur(6px)"}} onClick={()=>setPayModal(false)}><div onClick={e=>e.stopPropagation()} style={{background:C.sf,borderRadius:mob?"20px 20px 0 0":"20px",width:mob?"100%":"540px",maxHeight:mob?"92vh":"90vh",overflow:"auto",border:`1px solid ${C.brd}`,boxShadow:"0 -10px 60px rgba(0,0,0,.5)"}}><div style={{padding:mob?"20px 20px 0":"24px 32px 0",position:"sticky",top:0,background:C.sf,zIndex:2}}>{mob&&<div style={{width:40,height:4,borderRadius:2,background:C.brdL,margin:"0 auto 16px"}}/>}<div style={{display:"flex",justifyContent:"space-between",marginBottom:20}}><h3 style={{fontSize:mob?18:20,fontWeight:800,margin:0}}>{payStep===3?"Payment Submitted":"Make Payment"}</h3><button onClick={()=>setPayModal(false)} style={{background:"none",border:"none",color:C.ts,cursor:"pointer",padding:4}}><IcX size={20}/></button></div><div style={{display:"flex",gap:6,marginBottom:22}}>{steps.map((s,i)=><div key={i} style={{flex:1}}><div style={{height:3,borderRadius:2,background:i<=payStep?C.ac:C.brd,marginBottom:5}}/><span style={{fontSize:10,color:i<=payStep?C.ab:C.td,fontWeight:600}}>{s}</span></div>)}</div></div>
+    <div style={{padding:mob?"0 20px 24px":"0 32px 28px"}}>
+      {payStep===0&&<div style={{display:"flex",flexDirection:"column",gap:12}}><div style={{background:C.card,borderRadius:12,padding:16}}><div style={{fontSize:12,color:C.td,marginBottom:3}}>Paying as</div><div style={{fontSize:15,fontWeight:700}}>{cust.short}</div><div style={{fontSize:12,color:C.ts}}>{cust.id}</div></div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}><div style={{background:C.card,borderRadius:12,padding:16}}><div style={{fontSize:12,color:C.td,marginBottom:3}}>Invoice(s)</div><div style={{fontSize:14,fontWeight:700}}>{selPay.length>1?selPay.length+" invoices":inv.id}</div></div><div style={{background:C.card,borderRadius:12,padding:16}}><div style={{fontSize:12,color:C.td,marginBottom:3}}>Amount</div><div style={{fontSize:mob?18:22,fontWeight:800,color:C.ab}}>{aed(amt)}</div></div></div></div>}
+      {payStep===1&&<div style={{display:"flex",flexDirection:"column",gap:12}}><div><label style={{fontSize:12,color:C.td,fontWeight:600,display:"block",marginBottom:5}}>Remitting Bank</label><input className="li" defaultValue="HSBC Holdings PLC"/></div><div><label style={{fontSize:12,color:C.td,fontWeight:600,display:"block",marginBottom:5}}>Account / IBAN</label><input className="li" defaultValue="GB82 WEST 1234 5698 7654 32"/></div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}><div><label style={{fontSize:12,color:C.td,fontWeight:600,display:"block",marginBottom:5}}>SWIFT</label><input className="li" defaultValue="HSBCGB2LXXX"/></div><div><label style={{fontSize:12,color:C.td,fontWeight:600,display:"block",marginBottom:5}}>Currency</label><input className="li" value="AED" readOnly/></div></div><div style={{background:C.ac+"08",borderRadius:10,padding:"12px 14px",fontSize:12,color:C.ts,lineHeight:1.6}}><strong style={{color:C.ab}}>Beneficiary:</strong> Khorfakkan Commercial Terminal Operations<br/>IBAN: AE21 0331 0000 0198 7654 321 · SWIFT: EABORAEAXXX</div></div>}
+      {payStep===2&&<div style={{display:"flex",flexDirection:"column",gap:12}}><div style={{background:C.card,borderRadius:12,padding:16}}>{[{l:"From",v:cust.short+" — HSBC"},{l:"To",v:"Khorfakkan Terminals"},{l:"Amount",v:aed(amt)},{l:"Ref",v:selPay.length>1?"BATCH":inv.id},{l:"Method",v:"Wire Transfer (SWIFT)"}].map((r,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",padding:"9px 0",borderBottom:i<4?`1px solid ${C.brd}06`:"none",fontSize:13}}><span style={{color:C.td}}>{r.l}</span><span style={{fontWeight:600}}>{r.v}</span></div>)}</div><div style={{background:C.yl+"12",border:`1px solid ${C.yl}25`,borderRadius:10,padding:"12px 14px",display:"flex",gap:8,alignItems:"flex-start"}}><IcAlert size={15}/><span style={{fontSize:12,color:C.yl,lineHeight:1.5}}>Wire transfers cannot be reversed.</span></div></div>}
+      {payStep===3&&<div style={{textAlign:"center",padding:"10px 0"}}><div style={{width:60,height:60,borderRadius:"50%",background:C.gs,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 18px",color:C.gn}}><IcCheck size={30}/></div><div style={{fontSize:14,color:C.ts,marginBottom:6}}>Payment instruction submitted</div><div style={{fontSize:26,fontWeight:800,marginBottom:4}}>{aed(amt)}</div><div style={{fontSize:12,color:C.td,marginBottom:18}}>Ref: TXN-90283</div><div style={{background:C.card,borderRadius:10,padding:"12px 16px",fontSize:13,color:C.ts,lineHeight:1.6,textAlign:"left"}}>Processing 1-3 business days. Confirmation to {cust.email}.</div></div>}
+      <div style={{display:"flex",justifyContent:"space-between",marginTop:20,gap:10}}>{payStep>0&&payStep<3?<Btn variant="outline" onClick={()=>setPayStep(s=>s-1)} style={{flex:mob?1:undefined}}>Back</Btn>:<div style={{flex:mob?1:undefined}}/>}{payStep<3?<Btn onClick={()=>setPayStep(s=>s+1)} style={{flex:mob?1:undefined,justifyContent:"center"}}>{payStep===2?"Confirm & Submit":"Continue"}</Btn>:<Btn onClick={()=>{setPayModal(false);goHome()}} style={{flex:mob?1:undefined,justifyContent:"center"}}>Done</Btn>}</div>
+    </div></div></div>};
 
-  /* ── NAV ITEMS ── */
-  const mainTabs=[{id:"home",l:"Home",icon:IcDash},{id:"invoices",l:"Invoices",icon:IcInv},{id:"pay",l:"Pay",icon:IcWallet},{id:"history",l:"History",icon:IcHist},{id:"more",l:"More",icon:IcMenu}];
-  const navItems=[{id:"home",l:"My Account",icon:IcDash},{id:"invoices",l:"My Invoices",icon:IcInv},{id:"pay",l:"Make Payment",icon:IcWallet},{id:"history",l:"Payment History",icon:IcHist},{id:"statements",l:"Statements",icon:IcFile},{id:"support",l:"Help & Support",icon:IcHelp}];
-  const tabLabel=navItems.find(n=>n.id===tab)?.l||(tab==="support"?"Help & Support":tab==="statements"?"Statements":"");
+  const mTabs=[{id:"home",l:"Home",icon:IcDash},{id:"invoices",l:"Invoices",icon:IcInv},{id:"pay",l:"Pay",icon:IcWallet},{id:"history",l:"History",icon:IcHist},{id:"more",l:"More",icon:IcMenu}];
+  const dNav=[{id:"home",l:"My Account",icon:IcDash},{id:"invoices",l:"My Invoices",icon:IcInv},{id:"pay",l:"Make Payment",icon:IcWallet},{id:"history",l:"Payment History",icon:IcHist},{id:"statements",l:"Statements",icon:IcFile},{id:"support",l:"Help & Support",icon:IcHelp}];
+  const tLbl=dNav.find(n=>n.id===tab)?.l||"";
+  const RC=()=>{switch(tab){case"home":return<Home/>;case"invoices":return<Invoices/>;case"pay":return<Pay/>;case"history":return<History/>;case"statements":return<Statements/>;case"support":return<Support/>;default:return<Home/>}};
 
-  /* ═══ MOBILE LAYOUT ═══ */
-  if(mob) return <div style={{display:"flex",flexDirection:"column",height:"100vh",background:C.bg}}>
-    <header style={{padding:"12px 16px",borderBottom:`1px solid ${C.brd}`,display:"flex",alignItems:"center",justifyContent:"space-between",background:C.sf,minHeight:56,flexShrink:0}}>
-      <div style={{display:"flex",alignItems:"center",gap:8}}>
-        {/* Back button on mobile when not on home */}
-        {canGoBack&&tab!=="home"?
-          <button onClick={goBack} style={{background:"none",border:"none",color:C.ts,cursor:"pointer",padding:6,marginRight:2}}><IcBack size={22}/></button>
-        :null}
-        {/* Logo — taps go home */}
-        <div style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}} onClick={goHome}>
-          <div style={{width:32,height:32,borderRadius:8,background:`linear-gradient(135deg,${C.ac},${C.tl})`,display:"flex",alignItems:"center",justifyContent:"center"}}><IcAnchor size={16}/></div>
-          <div><div style={{fontSize:14,fontWeight:800,lineHeight:1.2}}>GTPay</div><div style={{fontSize:10,color:C.td}}>MSC · {cust.id}</div></div>
-        </div>
-      </div>
-      <div style={{display:"flex",alignItems:"center",gap:8}}>
-        <div style={{position:"relative"}}>
-          <button style={{background:"none",border:"none",color:C.ts,cursor:"pointer",padding:8,position:"relative"}} onClick={()=>setNotifOpen(!notifOpen)}>
-            <IcBell size={20}/>
-            {unreadCount>0&&<span style={{position:"absolute",top:4,right:4,width:7,height:7,borderRadius:"50%",background:C.rd}}/>}
-          </button>
-          {notifOpen&&<div style={{position:"fixed",inset:0,zIndex:90}} onClick={()=>setNotifOpen(false)}>
-            <div onClick={e=>e.stopPropagation()}>
-              <NotifPanel style={{position:"absolute",top:56,right:8,left:8}}/>
-            </div>
-          </div>}
-        </div>
-        <div style={{width:30,height:30,borderRadius:7,background:"#1A365D",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:C.ab}}>AR</div>
-      </div>
+  if(mob)return<div style={{display:"flex",flexDirection:"column",height:"100vh",background:C.bg}}>
+    <header style={{padding:"12px 16px",borderBottom:`1px solid ${C.brd}`,display:"flex",alignItems:"center",justifyContent:"space-between",background:C.sf,minHeight:56,flexShrink:0}}><div style={{display:"flex",alignItems:"center",gap:8}}>{canBack&&tab!=="home"&&<button onClick={goBack} style={{background:"none",border:"none",color:C.ts,cursor:"pointer",padding:6}}><IcBack size={22}/></button>}<div style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}} onClick={goHome}><div style={{width:32,height:32,borderRadius:8,background:`linear-gradient(135deg,${C.ac},${C.tl})`,display:"flex",alignItems:"center",justifyContent:"center"}}><IcAnchor size={16}/></div><div><div style={{fontSize:14,fontWeight:800}}>GTPay</div><div style={{fontSize:10,color:C.td}}>{cust.short}</div></div></div></div>
+      <div style={{display:"flex",alignItems:"center",gap:8}}><div style={{position:"relative"}}><button style={{background:"none",border:"none",color:C.ts,cursor:"pointer",padding:8,position:"relative"}} onClick={()=>setNotifOpen(!notifOpen)}><IcBell size={20}/>{unread>0&&<span style={{position:"absolute",top:4,right:4,width:7,height:7,borderRadius:"50%",background:C.rd}}/>}</button>{notifOpen&&<div style={{position:"fixed",inset:0,zIndex:90}} onClick={()=>setNotifOpen(false)}><div onClick={e=>e.stopPropagation()}><NPanel style={{position:"absolute",top:56,right:8,left:8}}/></div></div>}</div><div style={{width:30,height:30,borderRadius:7,background:cust.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,color:C.ab}}>{cust.initials}</div></div>
     </header>
-
-    <div style={{flex:1,overflow:"auto",padding:16}}>
-      {moreOpen?<div style={{display:"flex",flexDirection:"column",gap:8}}>
-        <div style={{fontSize:16,fontWeight:700,marginBottom:4}}>More</div>
-        {[{id:"statements",l:"Statements",icon:IcFile},{id:"support",l:"Help & Support",icon:IcHelp}].map(item=>
-          <Card key={item.id} style={{padding:"14px 16px",cursor:"pointer"}} onClick={()=>{navigate(item.id);setMoreOpen(false)}}>
-            <div style={{display:"flex",alignItems:"center",gap:12}}><div style={{width:36,height:36,borderRadius:9,background:C.as,display:"flex",alignItems:"center",justifyContent:"center",color:C.ac}}><item.icon size={17}/></div><span style={{fontSize:14,fontWeight:600}}>{item.l}</span><div style={{marginLeft:"auto",color:C.td}}><IcChev size={16}/></div></div>
-          </Card>
-        )}
-      </div>:
-        tab==="home"?<HomeView/>:tab==="invoices"?<InvoicesView/>:tab==="pay"?<PayView/>:tab==="history"?<HistoryView/>:tab==="statements"?<StatementsView/>:tab==="support"?<SupportView/>:null
-      }
-    </div>
-
-    <nav style={{display:"flex",borderTop:`1px solid ${C.brd}`,background:C.sf,paddingBottom:"env(safe-area-inset-bottom)",flexShrink:0}}>
-      {mainTabs.map(t=>{
-        const active=t.id==="more"?moreOpen:(tab===t.id&&!moreOpen);
-        return <button key={t.id} onClick={()=>{if(t.id==="more"){setMoreOpen(!moreOpen)}else{goTab(t.id)}}} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"10px 0 8px",background:"none",border:"none",cursor:"pointer",color:active?C.ab:C.td,transition:"color 0.15s"}}>
-          <t.icon size={20}/><span style={{fontSize:10,fontWeight:600}}>{t.l}</span>
-        </button>;
-      })}
-    </nav>
-    {payModal&&<PayModal/>}
+    <div style={{flex:1,overflow:"auto",padding:16}}>{moreOpen?<div style={{display:"flex",flexDirection:"column",gap:8}}><div style={{fontSize:16,fontWeight:700,marginBottom:4}}>More</div>{[{id:"statements",l:"Statements",icon:IcFile},{id:"support",l:"Help & Support",icon:IcHelp}].map(item=><Card key={item.id} style={{padding:"14px 16px",cursor:"pointer"}} onClick={()=>{nav(item.id);setMoreOpen(false)}}><div style={{display:"flex",alignItems:"center",gap:12}}><div style={{width:36,height:36,borderRadius:9,background:C.as,display:"flex",alignItems:"center",justifyContent:"center",color:C.ac}}><item.icon size={17}/></div><span style={{fontSize:14,fontWeight:600}}>{item.l}</span><div style={{marginLeft:"auto",color:C.td}}><IcChev size={16}/></div></div></Card>)}<Card style={{padding:"14px 16px",cursor:"pointer",borderColor:C.rd+"30"}} onClick={onLogout}><div style={{display:"flex",alignItems:"center",gap:12}}><div style={{width:36,height:36,borderRadius:9,background:C.rs,display:"flex",alignItems:"center",justifyContent:"center",color:C.rd}}><IcLogout size={17}/></div><span style={{fontSize:14,fontWeight:600,color:C.rd}}>Sign Out</span></div></Card></div>:<RC/>}</div>
+    <nav style={{display:"flex",borderTop:`1px solid ${C.brd}`,background:C.sf,paddingBottom:"env(safe-area-inset-bottom)",flexShrink:0}}>{mTabs.map(t=>{const a=t.id==="more"?moreOpen:(tab===t.id&&!moreOpen);return<button key={t.id} onClick={()=>{t.id==="more"?setMoreOpen(!moreOpen):goTab(t.id)}} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"10px 0 8px",background:"none",border:"none",cursor:"pointer",color:a?C.ab:C.td}}><t.icon size={20}/><span style={{fontSize:10,fontWeight:600}}>{t.l}</span></button>})}</nav>
+    {payModal&&<PMod/>}
   </div>;
 
-  /* ═══ DESKTOP LAYOUT ═══ */
-  return <div style={{display:"flex",height:"100vh",background:C.bg}}>
+  return<div style={{display:"flex",height:"100vh",background:C.bg}}>
     <div style={{width:250,minWidth:250,background:C.sf,borderRight:`1px solid ${C.brd}`,display:"flex",flexDirection:"column"}}>
-      {/* Logo — click goes home */}
-      <div style={{padding:"20px 22px",borderBottom:`1px solid ${C.brd}`,display:"flex",alignItems:"center",gap:12,cursor:"pointer"}} onClick={goHome}>
-        <div style={{width:38,height:38,borderRadius:10,background:`linear-gradient(135deg,${C.ac},${C.tl})`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><IcAnchor size={20}/></div>
-        <div><div style={{fontSize:15,fontWeight:800,letterSpacing:"-0.02em",lineHeight:1.2}}>GTPay</div><div style={{fontSize:10,color:C.td,fontWeight:600,letterSpacing:"0.06em"}}>CUSTOMER PORTAL</div></div>
-      </div>
-      <div style={{padding:"16px 22px",borderBottom:`1px solid ${C.brd}`}}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <div style={{width:36,height:36,borderRadius:8,background:"#1A365D",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,color:C.ab}}>MSC</div>
-          <div><div style={{fontSize:13,fontWeight:700,lineHeight:1.2}}>{cust.short}</div><div style={{fontSize:11,color:C.td}}>{cust.id}</div></div>
-        </div>
-      </div>
-      <nav style={{padding:"14px 8px",flex:1,display:"flex",flexDirection:"column",gap:2}}>
-        {navItems.map(item=><button key={item.id} onClick={()=>goTab(item.id)} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 16px",borderRadius:10,cursor:"pointer",transition:"all 0.15s",background:tab===item.id?C.as:"transparent",color:tab===item.id?C.ab:C.ts,fontWeight:tab===item.id?600:400,fontSize:14,border:"none",width:"100%",textAlign:"left",fontFamily:"inherit"}}><item.icon size={19}/><span>{item.l}</span></button>)}
-      </nav>
+      <div style={{padding:"20px 22px",borderBottom:`1px solid ${C.brd}`,display:"flex",alignItems:"center",gap:12,cursor:"pointer"}} onClick={goHome}><div style={{width:38,height:38,borderRadius:10,background:`linear-gradient(135deg,${C.ac},${C.tl})`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><IcAnchor size={20}/></div><div><div style={{fontSize:15,fontWeight:800,letterSpacing:"-.02em",lineHeight:1.2}}>GTPay</div><div style={{fontSize:10,color:C.td,fontWeight:600,letterSpacing:".06em"}}>CUSTOMER PORTAL</div></div></div>
+      <div style={{padding:"16px 22px",borderBottom:`1px solid ${C.brd}`}}><div style={{display:"flex",alignItems:"center",gap:10}}><div style={{width:36,height:36,borderRadius:8,background:cust.color,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:cust.short.length>4?10:13,color:C.ab}}>{cust.short.slice(0,6)}</div><div><div style={{fontSize:13,fontWeight:700,lineHeight:1.2}}>{cust.short}</div><div style={{fontSize:11,color:C.td}}>{cust.id}</div></div></div></div>
+      <nav style={{padding:"14px 8px",flex:1,display:"flex",flexDirection:"column",gap:2}}>{dNav.map(item=><button key={item.id} onClick={()=>goTab(item.id)} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 16px",borderRadius:10,cursor:"pointer",background:tab===item.id?C.as:"transparent",color:tab===item.id?C.ab:C.ts,fontWeight:tab===item.id?600:400,fontSize:14,border:"none",width:"100%",textAlign:"left",fontFamily:"inherit"}}><item.icon size={19}/><span>{item.l}</span></button>)}</nav>
+      <div style={{padding:"12px 8px",borderTop:`1px solid ${C.brd}`}}><button onClick={onLogout} style={{display:"flex",alignItems:"center",gap:12,padding:"11px 16px",borderRadius:10,cursor:"pointer",background:"transparent",color:C.ts,fontSize:14,border:"none",width:"100%",textAlign:"left",fontFamily:"inherit"}}><IcLogout size={19}/>Sign Out</button></div>
     </div>
-
     <div style={{flex:1,display:"flex",flexDirection:"column",overflow:"hidden"}}>
       <header style={{padding:"14px 32px",borderBottom:`1px solid ${C.brd}`,display:"flex",alignItems:"center",justifyContent:"space-between",background:C.sf,minHeight:64}}>
-        <div style={{display:"flex",alignItems:"center",gap:12}}>
-          {/* Desktop back button */}
-          {canGoBack&&tab!=="home"&&<button onClick={goBack} style={{background:C.cardH,border:`1px solid ${C.brd}`,borderRadius:8,color:C.ts,cursor:"pointer",padding:"6px 8px",display:"flex",alignItems:"center"}}><IcBack size={18}/></button>}
-          <div><h1 style={{fontSize:19,fontWeight:800,margin:0}}>{tabLabel}</h1><div style={{fontSize:12,color:C.td,marginTop:2}}>Port of Khorfakkan · Khorfakkan Commercial Terminal Operations</div></div>
-        </div>
-        <div style={{display:"flex",alignItems:"center",gap:14}}>
-          <div style={{position:"relative"}}>
-            <button style={{background:"none",border:"none",color:C.ts,cursor:"pointer",padding:6,position:"relative"}} onClick={()=>setNotifOpen(!notifOpen)}>
-              <IcBell size={20}/>
-              {unreadCount>0&&<span style={{position:"absolute",top:3,right:3,width:8,height:8,borderRadius:"50%",background:C.rd}}/>}
-            </button>
-            {notifOpen&&<NotifPanel style={{position:"absolute",top:"100%",right:0,width:400,marginTop:8,zIndex:50}}/>}
-          </div>
-          <div style={{width:1,height:26,background:C.brd}}/>
-          <div style={{display:"flex",alignItems:"center",gap:10}}><div style={{width:34,height:34,borderRadius:8,background:"#1A365D",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:800,color:C.ab}}>AR</div><div><div style={{fontSize:13,fontWeight:700}}>{cust.contact}</div><div style={{fontSize:11,color:C.td}}>Port Finance · MSC</div></div></div>
-        </div>
+        <div style={{display:"flex",alignItems:"center",gap:12}}>{canBack&&tab!=="home"&&<button onClick={goBack} style={{background:C.cardH,border:`1px solid ${C.brd}`,borderRadius:8,color:C.ts,cursor:"pointer",padding:"6px 8px",display:"flex",alignItems:"center"}}><IcBack size={18}/></button>}<div><h1 style={{fontSize:19,fontWeight:800,margin:0}}>{tLbl}</h1><div style={{fontSize:12,color:C.td,marginTop:2}}>Port of Khorfakkan · Khorfakkan Commercial Terminal Operations</div></div></div>
+        <div style={{display:"flex",alignItems:"center",gap:14}}><div style={{position:"relative"}}><button style={{background:"none",border:"none",color:C.ts,cursor:"pointer",padding:6,position:"relative"}} onClick={()=>setNotifOpen(!notifOpen)}><IcBell size={20}/>{unread>0&&<span style={{position:"absolute",top:3,right:3,width:8,height:8,borderRadius:"50%",background:C.rd}}/>}</button>{notifOpen&&<NPanel style={{position:"absolute",top:"100%",right:0,width:400,marginTop:8,zIndex:50}}/>}</div><div style={{width:1,height:26,background:C.brd}}/><div style={{display:"flex",alignItems:"center",gap:10}}><div style={{width:34,height:34,borderRadius:8,background:cust.color,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:800,color:C.ab}}>{cust.initials}</div><div><div style={{fontSize:13,fontWeight:700}}>{cust.contact}</div><div style={{fontSize:11,color:C.td}}>Port Finance · {cust.short}</div></div></div></div>
       </header>
-      <div style={{flex:1,overflow:"auto",padding:"26px 32px"}}>
-        {tab==="home"&&<HomeView/>}{tab==="invoices"&&<InvoicesView/>}{tab==="pay"&&<PayView/>}{tab==="history"&&<HistoryView/>}{tab==="statements"&&<StatementsView/>}{tab==="support"&&<SupportView/>}
-      </div>
+      <div style={{flex:1,overflow:"auto",padding:"26px 32px"}}><RC/></div>
     </div>
-    {payModal&&<PayModal/>}
-    {/* Click-away for desktop notifications */}
+    {payModal&&<PMod/>}
     {notifOpen&&<div style={{position:"fixed",inset:0,zIndex:40}} onClick={()=>setNotifOpen(false)}/>}
   </div>;
 }
 
+function App(){const[u,setU]=useState(null);if(!u)return<LoginPage onLogin={k=>setU(k)}/>;return<Portal ak={u} onLogout={()=>setU(null)}/>}
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
